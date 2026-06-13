@@ -1,0 +1,47 @@
+---
+title: "Overview"
+description: "Forensic analyzer for Microsoft Access databases."
+icon: "shield-alert"
+---
+
+`accdu_inspector` is a forensic and malware analysis tool designed to inspect Microsoft Access databases (`.accdu`, `.accdb`, `.accde`, `.accda`, or extracted ZIPs).
+
+It reveals **hidden macros, VBA payloads, OLE streams, and binary blobs** embedded inside Access containers — even when they're hex-encoded, fragmented, or disguised in UTF-16.
+
+<Info>
+  **Current version:** v1.1 · [GitHub Repository](https://github.com/tasox/accdu_inspector)
+</Info>
+
+## Capabilities
+
+<CardGroup cols={2}>
+  <Card title="VBA Detection" icon="code">
+    Deep marker detection tolerant to null-interleaving and Unicode obfuscation.
+  </Card>
+  <Card title="MS-OVBA Decompression" icon="archive">
+    Pure Python decompression — no native dependencies.
+  </Card>
+  <Card title="YARA Scanning" icon="shield">
+    Scans raw and carved data with your own rule sets.
+  </Card>
+  <Card title="Blob Carving" icon="layers">
+    Magic-based, entropy-based, HEX ASCII, and UTF-16 HEX carving.
+  </Card>
+  <Card title="Suspicion Scoring" icon="chart-bar">
+    Heuristic 0–100 score based on VBA, keywords, and embedded file signatures.
+  </Card>
+  <Card title="Structured Reporting" icon="file-text">
+    CSV and JSON output for SOC/IR pipelines.
+  </Card>
+</CardGroup>
+
+## What's New in v1.1
+
+| Enhancement | Description |
+|-------------|-------------|
+| **Fragmentation-Free HEX Recovery** | Nearby HEX chunks are automatically merged. |
+| **UTF-16 / Null-Interleaved HEX Detection** | Detects patterns like `4D5...` common in obfuscated Access payloads. |
+| **Blob De-duplication (SHA-256)** | Repeated binary data is stored only once. |
+| **Tuning Flags** | Control carving thresholds, entropy sensitivity, and merging behavior. |
+| **Integrated Carving Logic** | HEX, UTF-16 HEX, and high-entropy carving unified under one pipeline. |
+| **Refined Scoring Engine** | Incorporates VBA presence, keyword density, and embedded file signatures. |

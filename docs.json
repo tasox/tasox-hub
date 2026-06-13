@@ -1,0 +1,191 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "TasoX Security Tools",
+  "description": "Documentation hub for TasoX open-source security research tools.",
+  "colors": {
+    "primary": "#E63946",
+    "light": "#FF6B6B",
+    "dark": "#C1121F"
+  },
+  "favicon": "/favicon.ico",
+  "icons": {
+    "library": "lucide"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "contextual": {
+    "options": ["copy", "view", "assistant"]
+  },
+  "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Home",
+          "icon": "house",
+          "href": "/"
+        },
+        {
+          "anchor": "GitHub",
+          "icon": "github",
+          "href": "https://github.com/tasox"
+        }
+      ]
+    },
+    "tabs": [
+      {
+        "tab": "dmpHunter",
+        "icon": "search",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tools/dmphunter/overview",
+              "tools/dmphunter/install",
+              "tools/dmphunter/quickstart"
+            ]
+          },
+          {
+            "group": "Command Reference",
+            "pages": [
+              "tools/dmphunter/commands/memmap",
+              "tools/dmphunter/commands/handles",
+              "tools/dmphunter/commands/threads",
+              "tools/dmphunter/commands/modules",
+              "tools/dmphunter/commands/strings",
+              "tools/dmphunter/commands/scan",
+              "tools/dmphunter/commands/net",
+              "tools/dmphunter/commands/dump"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "tools/dmphunter/recipes",
+              "tools/dmphunter/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "accdu_inspector",
+        "icon": "shield-alert",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tools/accdu-inspector/overview",
+              "tools/accdu-inspector/install",
+              "tools/accdu-inspector/how-it-works"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "tools/accdu-inspector/cli-reference",
+              "tools/accdu-inspector/scoring",
+              "tools/accdu-inspector/output-structure"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "tools/accdu-inspector/workflows",
+              "tools/accdu-inspector/best-practices"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "rarADSExtractor",
+        "icon": "file-search",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "tools/raradsextractor/overview",
+              "tools/raradsextractor/how-it-works",
+              "tools/raradsextractor/usage"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Apophis",
+        "icon": "terminal",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tools/apophis/overview",
+              "tools/apophis/install",
+              "tools/apophis/usage"
+            ]
+          },
+          {
+            "group": "Shellcode Runners",
+            "pages": [
+              "tools/apophis/runners/3des",
+              "tools/apophis/runners/amsi-bypass",
+              "tools/apophis/runners/dotnet-script",
+              "tools/apophis/runners/confuserex",
+              "tools/apophis/runners/msi",
+              "tools/apophis/runners/installutil",
+              "tools/apophis/runners/aes"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "tools/apophis/downloaders",
+              "tools/apophis/reflection"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "CSharp Process Injection",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "tools/csharp-injection/overview"
+            ]
+          },
+          {
+            "group": "Techniques",
+            "pages": [
+              "tools/csharp-injection/techniques/01-high-level-api",
+              "tools/csharp-injection/techniques/02-high-level-api-suspend",
+              "tools/csharp-injection/techniques/03-low-level-map-section",
+              "tools/csharp-injection/techniques/04-low-level-modify-permissions",
+              "tools/csharp-injection/techniques/05-low-level-ntapis",
+              "tools/csharp-injection/techniques/06-classic-injection",
+              "tools/csharp-injection/techniques/07-classic-dll-injection"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [],
+    "primary": {
+      "type": "button",
+      "label": "GitHub",
+      "href": "https://github.com/tasox"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/taso_x",
+      "github": "https://github.com/tasox"
+    }
+  }
+}

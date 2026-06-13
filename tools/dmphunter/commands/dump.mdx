@@ -1,0 +1,42 @@
+---
+title: "dump / dump-json / dump-csv"
+description: "Dump raw bytes for a VA range or export triage data."
+---
+
+## dump
+
+Dump raw bytes for a **VA range**. Streams across discontiguous segments (MemoryList / Memory64 / Thread stacks). Skips unmapped holes.
+
+```bash
+dmph dump <dump> --start 0xVA [--end 0xVA | --length N] --out file.bin
+```
+
+```bash
+# Dump full thread stack
+dmph threads process.dmp
+dmph dump process.dmp --start 0x<StackStart> --end 0x<StackEnd> --out stack.bin
+
+# Dump 64 KB from a heap page
+dmph dump process.dmp --start 0x7FF600000000 --length 65536 --out page.bin
+```
+
+---
+
+## dump-json
+
+One-shot JSON triage: memmap, handles (decoded), threads, modules, plus `verify_PROCESS_SUSPEND_RESUME`.
+
+```bash
+dmph dump-json <dump> <out.json>
+```
+
+---
+
+## dump-csv
+
+Memory map → CSV (respects selectors).
+
+```bash
+dmph dump-csv <dump> <out.csv>
+    [--region-type TYPE] [--writable-only] [--rwx-only] [--committed-only]
+```

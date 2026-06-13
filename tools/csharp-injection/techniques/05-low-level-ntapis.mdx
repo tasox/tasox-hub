@@ -1,0 +1,13 @@
+---
+title: "05 — Low Level NtAPIs Only"
+description: "Shellcode injection using exclusively NT-level APIs."
+---
+
+Injection into a process of your choice (default: PowerShell) using only NT-level APIs with `PAGE_EXECUTE_READWRITE` as the allocation type.
+
+## API Calls
+
+- `NtOpenProcess`
+- `NtAllocateVirtualMemory`
+- `NtWriteVirtualMemory`
+- `NtCreateThreadEx`

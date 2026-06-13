@@ -1,0 +1,25 @@
+---
+title: "scan"
+description: "Streaming YARA scan over selected memory regions."
+---
+
+**Streaming YARA** over selected regions — no huge buffers.  
+Default `--committed-only` is **True**.
+
+## Syntax
+
+```bash
+dmph scan <dump> --yara rules.yar
+    [--region-type TYPE] [--writable-only] [--rwx-only] [--committed-only/--no-committed-only]
+```
+
+## Examples
+
+```bash
+dmph scan process.dmp --yara cobalt.yar
+dmph scan process.dmp --yara rules.yar --region-type PRIVATE --writable-only
+```
+
+<Note>
+Install YARA extras first: `pip install -e .[yara]`
+</Note>

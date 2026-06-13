@@ -1,0 +1,29 @@
+---
+title: "strings"
+description: "Stream-extract ASCII and UTF-16LE strings from dump regions."
+---
+
+Stream-extract **ASCII & UTF-16LE** strings. Two modes:
+
+1. **Region-driven** (default; respects selectors)
+2. **VA-range** via `--start/--end` or `--start/--length` (overrides selectors)
+
+## Syntax
+
+```bash
+dmph strings <dump>
+    [--min-len N]
+    [--region-type TYPE] [--writable-only] [--rwx-only] [--committed-only]
+    [--cmdlines] [--limit N]
+    [--start 0xVA] [--end 0xVA] [--length N]
+```
+
+## Examples
+
+```bash
+# Likely command lines across committed PRIVATE regions
+dmph strings process.dmp --region-type PRIVATE --committed-only --cmdlines --min-len 5
+
+# Scan a specific VA interval (e.g., a thread stack or heap page)
+dmph strings process.dmp --start 0x0000022DF0000000 --length 65536 --min-len 6
+```

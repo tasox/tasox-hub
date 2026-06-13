@@ -1,0 +1,20 @@
+---
+title: "modules"
+description: "List modules and their import tables (IAT)."
+---
+
+List modules. With `--iat`, print the import table per module (up to 5000 symbols per module).  
+Supports fuzzy filter via `--module "contains:<text>"`.
+
+## Syntax
+
+```bash
+dmph modules <dump> [--iat] [--module "contains:<text>"]
+```
+
+## Examples
+
+```bash
+dmph modules process.dmp --iat
+dmph modules process.dmp --iat --module "contains:ws2_32.dll"
+```

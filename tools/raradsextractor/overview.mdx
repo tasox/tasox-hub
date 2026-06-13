@@ -1,0 +1,27 @@
+---
+title: "Overview"
+description: "Safe Python-only parser for RAR5 archives targeting Alternate Data Streams."
+icon: "file-search"
+---
+
+Recent **WinRAR 0-day vulnerabilities** — including CVE-2025-8088 and CVE-2025-6218 — have highlighted how attackers abuse RAR archives in phishing campaigns.
+
+Adversaries weaponize RAR archives by:
+- Embedding **Alternate Data Streams (ADS)** inside files in the archive
+- Using **malformed headers** or **XTRA blocks** to bypass detection
+- Leveraging WinRAR parsing vulnerabilities to achieve **code execution** when archives are opened
+
+Traditional tools like `unrar.exe` or WinRAR's GUI can be **dangerous to run** on malicious samples and may **not expose hidden ADS streams**.
+
+<Info>
+  **rarADSExtractor** provides a safe, Python-only parser for **Incident Responders, Threat Hunters, and SOC analysts**. [GitHub Repository](https://github.com/tasox/rarADSExtractor)
+</Info>
+
+## Why This Matters for SOC/IR
+
+| Benefit | Description |
+|---------|-------------|
+| **Safe Analysis** | Avoids risky execution of WinRAR or `unrar.exe` |
+| **Visibility** | Uncovers hidden ADS streams often abused in malware delivery |
+| **Automation-Friendly** | Python-only, no external dependencies |
+| **Detection & Hunting** | Quickly inspect suspicious archives from CVE-2025-8088 / CVE-2025-6218 campaigns |

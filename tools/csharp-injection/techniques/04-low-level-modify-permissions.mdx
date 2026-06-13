@@ -1,0 +1,14 @@
+---
+title: "04 — Low Level API (Modify Permissions)"
+description: "Section injection with NtProtectVirtualMemory to modify permissions."
+---
+
+Extends technique 03 by calling `NtProtectVirtualMemory` to modify the section's permissions after mapping.
+
+## API Calls
+
+- `OpenProcess`
+- `NtCreateSection`
+- `NtMapViewOfSection`
+- `NtCreateThreadEx`
+- `NtProtectVirtualMemory`

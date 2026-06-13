@@ -1,0 +1,54 @@
+---
+title: "Quick Start"
+description: "Common dmpHunter commands to get started fast."
+icon: "rocket"
+---
+
+## Essential Commands
+
+```bash
+# 1) One-shot JSON triage: memmap, handles, threads, modules
+dmph dump-json process.dmp triage.json
+
+# 2) Memory map filtered to IMAGE regions → CSV
+dmph memmap process.dmp --region-type IMAGE --csv mem.csv
+
+# 3) Handles with decoded access, verify PROCESS_SUSPEND_RESUME
+dmph handles process.dmp --handle-type Process --verify
+
+# 4) Threads and their stack ranges
+dmph threads process.dmp
+
+# 5) Modules + IAT
+dmph modules process.dmp --iat
+
+# 6) Strings across committed PRIVATE regions, show likely command lines
+dmph strings process.dmp --region-type PRIVATE --committed-only --cmdlines --min-len 5
+
+# 7) YARA streaming scan
+dmph scan process.dmp --yara rules.yar --region-type PRIVATE --writable-only
+
+# 8) Per-thread network heuristics
+dmph net process.dmp
+
+# 9) Dump a precise VA range
+dmph dump process.dmp --start 0x7FF600000000 --end 0x7FF600001FFF --out chunk.bin
+
+# or start + length
+dmph dump process.dmp --start 0x0000022DF0000000 --length 65536 --out region.bin
+```
+
+## Selectors & Exporters
+
+**Selectors** (supported by several commands):
+
+| Flag | Description |
+|------|-------------|
+| `--region-type PRIVATE\|MAPPED\|IMAGE` | Filter by memory region type |
+| `--writable-only` | RW / WRCOPY / XRW / XWRCOPY regions |
+| `--rwx-only` | PAGE_EXECUTE_READWRITE only |
+| `--committed-only` | MEM_COMMIT state only |
+
+**Exporters:**
+- `--json out.json` and `--csv out.csv` on `memmap`
+- Dedicated: `dump-json`, `dump-csv`

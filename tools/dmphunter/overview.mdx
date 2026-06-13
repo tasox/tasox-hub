@@ -1,0 +1,48 @@
+---
+title: "Overview"
+description: "Hunt indicators inside Windows mini/full process dumps."
+icon: "search"
+---
+
+> **dmpHunter** — Hunt indicators inside Windows **mini/full** process dumps: memory maps, handles, threads, modules (+ IAT), strings, sockets↔threads, YARA, and surgical VA-range dumping.
+
+<Info>
+  **Current version:** v0.2.0 · [GitHub Repository](https://github.com/tasox/dmpHunter)
+</Info>
+
+## CLI Aliases
+
+| Command | Description |
+|---------|-------------|
+| `dmph` | Primary CLI |
+| `dmpHunter` | Secondary alias |
+| `mdr` | Back-compat alias |
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Mini & Full Dump Support" icon="database">
+    Unified VA→file mapping from MemoryList, Memory64List, and Thread stacks.
+  </Card>
+  <Card title="Memory Map" icon="map">
+    Decoded protection, start/end VAs, CSV/JSON export.
+  </Card>
+  <Card title="Handles" icon="key">
+    Decoded access masks (process & thread), verify `PROCESS_SUSPEND_RESUME`.
+  </Card>
+  <Card title="Threads" icon="layers">
+    TEB and StackStart/StackEnd per thread.
+  </Card>
+  <Card title="Modules & IAT" icon="puzzle">
+    Full import table parsing per module.
+  </Card>
+  <Card title="Strings" icon="text">
+    ASCII + UTF-16LE, VA-range scanning, and command-line heuristics.
+  </Card>
+  <Card title="YARA" icon="shield">
+    Streaming scan over selected regions — no huge allocations.
+  </Card>
+  <Card title="Network Heuristics" icon="network">
+    Socket-like handles correlated to threads + endpoint extraction from stacks.
+  </Card>
+</CardGroup>

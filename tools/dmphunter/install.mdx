@@ -1,0 +1,34 @@
+---
+title: "Installation"
+description: "Install dmpHunter on Linux, macOS, or Windows."
+icon: "download"
+---
+
+Requires Python **3.9+**. Works cross-platform for analysis; Windows is only needed to create the dumps.
+
+## Standard Install
+
+```bash
+# Clone the repository
+git clone https://github.com/tasox/dmpHunter.git
+cd dmpHunter
+
+# Install from repo root (contains pyproject.toml)
+pip install -e .
+```
+
+## Optional: YARA Support
+
+```bash
+pip install -e .[yara]
+```
+
+## Verify Installation
+
+```bash
+dmph --help
+# or
+dmpHunter --help
+# or (alias)
+mdr --help
+```

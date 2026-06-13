@@ -1,0 +1,15 @@
+---
+title: "Heuristic Scoring"
+description: "How accdu_inspector calculates suspicion scores."
+icon: "chart-bar"
+---
+
+Scores range from **0–100**. High scores suggest suspicious or executable content.
+
+| Component | Weight |
+|-----------|--------|
+| Keyword presence | 0–40 |
+| URLs / IPs / file paths | +10–20 |
+| OLE / PE signatures | +15–25 |
+| Embedded blobs | +15 |
+| VBA markers | +15 |

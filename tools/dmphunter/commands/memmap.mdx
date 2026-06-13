@@ -1,0 +1,19 @@
+---
+title: "memmap"
+description: "Show memory regions with decoded protection flags."
+---
+
+Show memory regions with **Start VA**, **End VA**, **Size**, **State**, **Type**, **Protect** (decoded).
+
+## Syntax
+
+```bash
+dmph memmap <dump> [--region-type IMAGE|PRIVATE|MAPPED] [--writable-only] [--rwx-only]
+                   [--committed-only] [--limit N] [--json out.json] [--csv out.csv]
+```
+
+## Example
+
+```bash
+dmph memmap process.dmp --region-type IMAGE --json mem.json
+```

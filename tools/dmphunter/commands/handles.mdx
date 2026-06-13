@@ -1,0 +1,20 @@
+---
+title: "handles"
+description: "List handles with decoded access masks."
+---
+
+List handles; for process/thread types show **decoded** access flags.  
+`--verify` prints whether any Process handle has `PROCESS_SUSPEND_RESUME`.
+
+## Syntax
+
+```bash
+dmph handles <dump> [--handle-type TEXT] [--verify]
+```
+
+## Examples
+
+```bash
+dmph handles process.dmp
+dmph handles process.dmp --handle-type Process --verify
+```

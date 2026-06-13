@@ -1,0 +1,12 @@
+---
+title: "net"
+description: "Correlate socket handles to threads and extract network endpoints."
+---
+
+Heuristically correlates **socket-like handles** to **threads**, and scans each thread's **stack** for IP endpoints (sockaddr patterns + textual `a.b.c.d:port`).
+
+## Syntax
+
+```bash
+dmph net <dump> [--handle-type Socket]
+```

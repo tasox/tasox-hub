@@ -1,0 +1,18 @@
+---
+title: "07 — Classic DLL Injection"
+description: "Classic DLL injection using LoadLibrary via CreateRemoteThread."
+---
+
+Classic DLL injection (x86/x64) into a process of your choice (default: `notepad.exe`). Extends technique 06 with DLL-specific APIs.
+
+## API Calls
+
+- `CreateToolhelp32Snapshot`
+- `Process32First`
+- `Process32Next`
+- `OpenProcess`
+- `GetProcAddress`
+- `GetModuleHandle`
+- `VirtualAllocEx`
+- `WriteProcessMemory`
+- `CreateRemoteThread`

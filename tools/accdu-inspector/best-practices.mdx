@@ -1,0 +1,19 @@
+---
+title: "Best Practices"
+description: "Tips for effective accdu_inspector triage."
+icon: "check-circle"
+---
+
+- Use `--dump-markers` during triage to locate hidden VBA signatures.
+- Combine with `--extract-from-markers` for auto-recovery of compressed VBA.
+- Adjust `--entropy-threshold` when analyzing compressed or obfuscated payloads.
+- Review high-entropy `.bin` files manually — often encrypted or packed executables.
+- Re-scan carved blobs with external tools (e.g., PEStudio, ExifTool, capa).
+
+## Recommended YARA Sources
+
+- [YARA-Rules/rules](https://github.com/YARA-Rules/rules)
+- [Neo23x0/signature-base](https://github.com/Neo23x0/signature-base)
+- [Elastic Security Artifacts](https://github.com/elastic/protections-artifacts)
+- [abuse.ch Feeds](https://abuse.ch)
+- [VirusTotal YARA Repos](https://github.com/VirusTotal/yara)

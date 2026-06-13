@@ -1,0 +1,34 @@
+---
+title: "Overview"
+description: "Bash script that generates shellcode runners in multiple formats."
+icon: "terminal"
+---
+
+**Apophis** is a Bash script that leverages tools such as `DotNetToJScript`, `ConfuserEx`, `Net-Obfuscator`, and **Mono .Net Framework** to generate shellcode runners in various formats from C# templates.
+
+<Info>
+  [GitHub Repository](https://github.com/tasox/Apophis)
+</Info>
+
+## Generated Shellcode Runner Formats
+
+| Format | Description |
+|--------|-------------|
+| XOR | `.exe`, `.dll` |
+| Caesar | `.exe`, `.dll` |
+| AMSI Bypass | Patching, Unhooking |
+| TripleDES | `.exe` |
+| ASPX / Web.Config | Web-based delivery |
+| HTA / JS / XSL | Script-based execution |
+| MSI | Installer-based delivery |
+| InstallUtil | AppLocker bypass |
+| AES + Compression | `.exe` with compression |
+
+## Payload Naming Prefixes
+
+| Prefix | Meaning |
+|--------|---------|
+| `_embedded` | Shellcode is embedded inside the runner |
+| `_marshal` | Payload injected into executable's own memory space |
+| `_numa` | `VirtualAllocExNuma` used instead of `VirtualAllocEx` |
+| `_FlsAlloc` | `FlsAlloc` API was used |

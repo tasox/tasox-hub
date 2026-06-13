@@ -1,0 +1,28 @@
+---
+title: "Usage"
+description: "Run rarADSExtractor against a suspicious RAR5 archive."
+icon: "terminal"
+---
+
+## Installation
+
+```bash
+git clone https://github.com/tasox/rarADSExtractor.git
+cd rarADSExtractor
+```
+
+No external dependencies required — pure Python.
+
+## Running
+
+```bash
+python rarADSExtractor.py suspicious.rar
+```
+
+## Sample Output
+
+```
+[+] invoice.pdf :: Zone.Identifier -> ADS_DUMP/invoice_pdf__Zone.Identifier (123 bytes)
+    [decoded via text:utf-16le] ADS_DUMP/invoice_pdf__Zone.Identifier.decoded.txt
+    [preview] [ZoneTransfer]\nZoneId=3\nReferrerUrl=hxxp://malicious[.]site\n...
+```

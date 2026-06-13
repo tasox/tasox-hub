@@ -1,0 +1,31 @@
+---
+title: "Example Workflows"
+description: "Common investigation patterns with accdu_inspector."
+icon: "play"
+---
+
+### 1. Standard Scan
+
+```bash
+python accdu_inspector.py sample.accdu --out ./analysis
+```
+
+### 2. Marker-Based VBA Extraction
+
+```bash
+python accdu_inspector.py suspect.accdu --out ./out --dump-markers --extract-from-markers
+```
+
+### 3. Deep Carving (Aggressive)
+
+```bash
+python accdu_inspector.py suspect.accdu --out ./out \
+  --entropy-threshold 6.8 --min-hex-chars 80 --utf16-min-pairs 50 \
+  --merge-gap-chars 128 --merge-gap-bytes 128
+```
+
+### 4. YARA-Enhanced DFIR Scan
+
+```bash
+python accdu_inspector.py ./samples --out ./out --yara ./rules
+```

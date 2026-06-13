@@ -1,0 +1,34 @@
+---
+title: "CLI Reference"
+description: "All flags and tuning parameters for accdu_inspector."
+icon: "terminal"
+---
+
+## Core Flags
+
+| Flag | Description |
+|------|-------------|
+| `input` | Path to `.accdu`, `.accdb`, `.accde`, `.accda`, `.zip`, or folder. |
+| `--out`, `-o` | Output directory for results. |
+| `--format`, `-f` | Output format: `json` or `csv`. |
+| `--modules-only` | Print all recovered VBA to stdout and exit. |
+| `--dump-markers` | Display a table of VBA markers with byte offsets. |
+| `--dump-markers-json <file>` | Save marker map to JSON. |
+| `--extract-from-markers` | Attempt MS-OVBA decompression near marker offsets. |
+| `--yara <path>` | Scan with YARA rules from a file or directory. |
+| `--no-strings` | Skip string extraction. |
+| `--no-ole` | Disable OLE VBA extraction. |
+| `--no-msovba` | Disable pure-Python MS-OVBA decompression. |
+| `--no-dedupe` | Disable SHA-256 de-duplication of carved blobs. |
+
+## Tuning Parameters
+
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `--min-hex-chars` | 100 | Minimum continuous hex chars for ASCII HEX carving. |
+| `--utf16-min-pairs` | 60 | Minimum UTF-16 hex pairs to detect. |
+| `--entropy-threshold` | 7.2 | Entropy threshold for high-entropy blob carving. |
+| `--carve-window` | 1024 | Size of sliding entropy window. |
+| `--carve-min-size` | 256 | Minimum bytes for a blob to be saved. |
+| `--merge-gap-chars` | 64 | Merge fragmented ASCII hex runs separated by ≤N chars. |
+| `--merge-gap-bytes` | 64 | Merge fragmented UTF-16 hex runs separated by ≤N bytes. |

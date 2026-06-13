@@ -1,0 +1,57 @@
+---
+title: "Recipes"
+description: "Common investigation workflows with dmpHunter."
+icon: "book-open"
+---
+
+## Identify the Thread Beaconing to C2
+
+```bash
+# 1) See sockets and endpoints per thread
+dmph net process.dmp
+
+# 2) Inspect suspect thread's stack range
+dmph threads process.dmp
+
+# 3) Dump stack to file
+dmph dump process.dmp --start 0x<StackStart> --end 0x<StackEnd> --out stack.bin
+
+# 4) Find strings in that exact range
+dmph strings process.dmp --start 0x<StackStart> --end 0x<StackEnd> --min-len 5
+```
+
+<Tip>
+If you find pointer-like values on the stack, match them to **PRIVATE, RW** regions in `dmph memmap` and dump those pages.
+</Tip>
+
+---
+
+## Focus on Payload/Config Regions
+
+```bash
+# Committed, writable PRIVATE regions are prime suspects
+dmph memmap process.dmp --region-type PRIVATE --writable-only --committed-only --csv mem.csv
+
+# Strings across those regions
+dmph strings process.dmp --region-type PRIVATE --writable-only --committed-only --min-len 6 --limit 1000
+
+# YARA signatures (streaming)
+dmph scan process.dmp --yara malware_rules.yar --region-type PRIVATE --writable-only
+```
+
+---
+
+## Walk Imports for a Given Module
+
+```bash
+dmph modules process.dmp --iat --module "contains:winhttp"
+```
+
+---
+
+## Export Everything and Work with `jq`
+
+```bash
+dmph dump-json process.dmp triage.json
+jq '.threads[] | {tid, stack_start, stack_end}' triage.json
+```

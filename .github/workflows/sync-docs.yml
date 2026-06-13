@@ -1,0 +1,46 @@
+name: Sync READMEs from tool repos
+
+on:
+  schedule:
+    # Runs every day at 02:00 UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout tasox-hub
+        uses: actions/checkout@v4
+
+      - name: Fetch READMEs from tool repos
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          fetch_readme() {
+            local repo=$1
+            local dest=$2
+            echo "Fetching README from tasox/$repo..."
+            gh api "repos/tasox/$repo/contents/README.md" --jq '.content' | base64 -d > "$dest" || echo "WARNING: Could not fetch $repo README"
+          }
+
+          fetch_readme "dmpHunter"              "tools/dmphunter/_readme_source.md"
+          fetch_readme "accdu_inspector"        "tools/accdu-inspector/_readme_source.md"
+          fetch_readme "rarADSExtractor"        "tools/raradsextractor/_readme_source.md"
+          fetch_readme "Apophis"                "tools/apophis/_readme_source.md"
+          fetch_readme "CSharp_Process_Injection" "tools/csharp-injection/_readme_source.md"
+
+      - name: Commit updated READMEs (if changed)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tools/**/_readme_source.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: sync READMEs from tool repos [skip ci]"
+            git push
+          fi

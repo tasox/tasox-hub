@@ -1,0 +1,43 @@
+---
+title: "Troubleshooting & FAQ"
+description: "Common issues and answers for dmpHunter."
+icon: "circle-help"
+---
+
+## Troubleshooting
+
+**`dump` wrote 0 bytes**  
+Fixed in **v0.2.0** by streaming across segments and including thread stacks in the VA map. If you still get 0 bytes, the VA range may not exist in the dump — try a thread stack or IMAGE region address from `memmap`.
+
+**`ValueError: Invalid RVA/size:`**  
+A stream descriptor points beyond the file bounds (truncated/custom dump). Capture a **Full** dump if possible.
+
+**No endpoints in `net` but Process Explorer shows a connection**  
+Works best with **Full** dumps. The thread may not have had the handle or sockaddr on its stack at capture time. Try again near the beacon interval or dump the thread's stack.
+
+**YARA not found**
+
+```bash
+pip install -e .[yara]
+```
+
+---
+
+## FAQ
+
+**Does this show plaintext C2 config?**  
+Not necessarily. Code is usually present in clear, but configs are often obfuscated/encrypted or sleep-masked. Use `dmph` to target the right pages, then run a dedicated config extractor.
+
+**Mini vs Full dumps?**  
+Full dumps retain much more memory (stacks, heaps), improving `net`, `strings`, and YARA results. Mini dumps may omit relevant pages.
+
+**Can I pipe output into my own tooling?**  
+Yes — use `dump-json`, `dump-csv`, or dump exact VA ranges (`dump`) for post-processing.
+
+---
+
+## Performance Tips
+
+- Use **selectors** to reduce scanned memory (`--region-type PRIVATE --writable-only --committed-only`).
+- Prefer **VA-range** mode for `strings` when you already know the stack/page to inspect.
+- Keep YARA rules focused; avoid massive rule-sets unless needed.
