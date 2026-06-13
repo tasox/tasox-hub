@@ -1,0 +1,63 @@
+---
+title: "Installation"
+description: "Install the extension and configure the native messaging host."
+icon: "download"
+---
+
+## Step 1 — Load the Extension
+
+1. Open Edge and navigate to `edge://extensions/` (or `chrome://extensions/` for Chrome)
+2. Enable **Developer mode**
+3. Click **Load unpacked** and select the `notepad-launcher` folder
+4. **Copy the Extension ID** — you'll need it in Step 2 (format: `abcdefghijklmnopqrstuvwxyz123456`)
+
+## Step 2 — Configure the Native Messaging Host
+
+Open `com.notepad.launcher.json` and replace:
+- `YOUR_EXTENSION_ID_HERE` → your actual Extension ID
+- `path` → full path to your `native_host.py` (or `native_host.bat` on Windows)
+
+<Tabs>
+  <Tab title="Windows">
+    1. Update `install_host.reg` — replace `C:\\path\\to\\com.notepad.launcher.json` with the full path to your manifest.
+    2. Double-click `install_host.reg` → click **Yes**.
+    3. Verify Python is installed: `python --version`
+
+    Registry paths:
+    - Edge: `HKEY_CURRENT_USER\Software\Microsoft\Edge\NativeMessagingHosts\com.notepad.launcher`
+    - Chrome: `HKEY_CURRENT_USER\Software\Google\Chrome\NativeMessagingHosts\com.notepad.launcher`
+  </Tab>
+  <Tab title="macOS">
+    ```bash
+    chmod +x /path/to/native_host.py
+
+    # Edge
+    mkdir -p ~/Library/Application\ Support/Microsoft\ Edge/NativeMessagingHosts/
+    cp com.notepad.launcher.json ~/Library/Application\ Support/Microsoft\ Edge/NativeMessagingHosts/
+
+    # Chrome
+    mkdir -p ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/
+    cp com.notepad.launcher.json ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/
+    ```
+  </Tab>
+  <Tab title="Linux">
+    ```bash
+    chmod +x /path/to/native_host.py
+
+    # Edge
+    mkdir -p ~/.config/microsoft-edge/NativeMessagingHosts/
+    cp com.notepad.launcher.json ~/.config/microsoft-edge/NativeMessagingHosts/
+
+    # Chrome
+    mkdir -p ~/.config/google-chrome/NativeMessagingHosts/
+    cp com.notepad.launcher.json ~/.config/google-chrome/NativeMessagingHosts/
+    ```
+  </Tab>
+</Tabs>
+
+## Step 3 — Test
+
+1. Click the extension icon in Edge/Chrome
+2. (Optional) Enter a file path in the text field
+3. Click **Launch Notepad**
+4. The configured application should open

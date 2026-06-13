@@ -145,25 +145,20 @@
         ]
       },
       {
-        "tab": "CSharp Process Injection",
-        "icon": "code",
+        "tab": "Browser Extension",
+        "icon": "puzzle",
         "groups": [
           {
-            "group": "Overview",
+            "group": "Getting Started",
             "pages": [
-              "tools/csharp-injection/overview"
+              "tools/browser-extension/overview",
+              "tools/browser-extension/install"
             ]
           },
           {
-            "group": "Techniques",
+            "group": "Reference",
             "pages": [
-              "tools/csharp-injection/techniques/01-high-level-api",
-              "tools/csharp-injection/techniques/02-high-level-api-suspend",
-              "tools/csharp-injection/techniques/03-low-level-map-section",
-              "tools/csharp-injection/techniques/04-low-level-modify-permissions",
-              "tools/csharp-injection/techniques/05-low-level-ntapis",
-              "tools/csharp-injection/techniques/06-classic-injection",
-              "tools/csharp-injection/techniques/07-classic-dll-injection"
+              "tools/browser-extension/troubleshooting"
             ]
           }
         ]

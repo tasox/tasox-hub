@@ -1,0 +1,43 @@
+---
+title: "Overview"
+description: "Chrome/Edge extension that uses Native Messaging to execute code from the browser."
+icon: "puzzle"
+---
+
+A Chrome/Edge extension that leverages the **Native Messaging API** to bridge the browser and the host operating system — demonstrated here by launching Notepad, but designed with a broader execution scope in mind.
+
+<Info>
+  [GitHub Repository](https://github.com/tasox/browser-extension-for-code-exec)
+</Info>
+
+## Components
+
+### Extension Files
+
+| File | Purpose |
+|------|---------|
+| `manifest.json` | Extension configuration and permissions |
+| `background.js` | Service worker — handles native messaging connection |
+| `popup.html` | Extension popup UI |
+| `popup.js` | Popup interaction logic |
+| `icon*.png` | Extension icons (16, 48, 128px) |
+
+### Native Host Files
+
+| File | Purpose |
+|------|---------|
+| `native_host.py` | Python script that receives messages and executes commands |
+| `native_host.bat` | Windows batch wrapper for Python (optional) |
+| `com.notepad.launcher.json` | Native messaging host manifest |
+| `install_host.reg` | Registry installer for Windows |
+
+## How It Works
+
+1. **Extension → Native Host**: The extension calls `chrome.runtime.connectNative()` to open a persistent connection.
+2. **Message Format**: JSON messages prefixed with a 4-byte length header (standard Native Messaging protocol).
+3. **Native Host → System**: The Python script receives the JSON command and executes it via `subprocess.Popen()`.
+4. **Response**: The native host sends a JSON status message back to the extension.
+
+## Customization
+
+Edit `native_host.py` to launch different applications, execute custom commands, process files before opening, or return richer status information — the extension shell stays the same.

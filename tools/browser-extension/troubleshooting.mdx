@@ -1,0 +1,42 @@
+---
+title: "Troubleshooting"
+description: "Common issues and fixes for the browser extension."
+icon: "circle-help"
+---
+
+## Extension Can't Connect to Native Host
+
+1. Verify the Extension ID in `com.notepad.launcher.json` matches your actual ID exactly.
+2. Check the `path` in the manifest points to the correct file location.
+3. Ensure Python is in your PATH: `python --version`
+4. Confirm the registry was properly updated (Windows).
+5. **Restart Edge/Chrome** after making any changes.
+
+## Python Not Found
+
+- Install Python from [python.org](https://www.python.org)
+- On Windows, use `native_host.bat` instead of `native_host.py` in the manifest, and update the batch file to use the full path to `python.exe`
+
+## Permission Denied (Linux / macOS)
+
+```bash
+chmod +x native_host.py
+```
+
+## Registry Changes Don't Take Effect (Windows)
+
+1. Fully close Edge (check Task Manager — kill all `msedge.exe` processes)
+2. Double-click the `.reg` file again
+3. Restart Edge
+
+## Debugging
+
+**Native host:**
+1. Uncomment the logging code in `native_host.py`
+2. Check the log file for errors
+3. Test the script manually from the command line
+
+**Extension:**
+1. Open `edge://extensions/`
+2. Click **Inspect views: service worker** under your extension
+3. Check the console for error messages
