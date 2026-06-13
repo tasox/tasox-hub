@@ -3,20 +3,123 @@ title: "TasoX Security Tools"
 description: "Open-source tools for offensive security research, DFIR, and malware analysis."
 ---
 
-<CardGroup cols={2}>
-  <Card title="dmpHunter" icon="search" href="/tools/dmphunter/overview">
-    Hunt indicators inside Windows mini/full process dumps — memory maps, handles, YARA, strings, and network heuristics.
+<img
+  className="block dark:hidden"
+  src="/logo/light.svg"
+  alt="TasoX Security Tools"
+/>
+<img
+  className="hidden dark:block"
+  src="/logo/dark.svg"
+  alt="TasoX Security Tools"
+/>
+
+## Welcome
+
+A collection of open-source tools for **offensive security research**, **digital forensics & incident response (DFIR)**, and **malware analysis** — built for red teamers, threat hunters, and SOC analysts.
+
+<Warning>
+  These tools are intended for **authorized security research, penetration testing, and red team operations only**. Always obtain proper written authorization before using any of these tools in a target environment. Unauthorized use may violate local, national, or international laws.
+</Warning>
+
+---
+
+## DFIR & Malware Analysis
+
+Tools for incident response, forensic artifact extraction, and malware triage.
+
+<CardGroup cols={3}>
+  <Card
+    title="dmpHunter"
+    icon="search"
+    color="#E63946"
+    href="/tools/dmphunter/overview"
+  >
+    Hunt indicators inside Windows **mini/full** process dumps — memory maps, handles, threads, modules, YARA, strings, and network heuristics.
+
+    **Language:** Python · **Platform:** Windows / Linux / macOS
   </Card>
-  <Card title="accdu_inspector" icon="shield-alert" href="/tools/accdu-inspector/overview">
-    Forensic analyzer for Microsoft Access databases — uncovers hidden VBA, OLE streams, and binary blobs.
+  <Card
+    title="accdu_inspector"
+    icon="shield-alert"
+    color="#E63946"
+    href="/tools/accdu-inspector/overview"
+  >
+    Forensic analyzer for Microsoft Access databases — uncovers hidden VBA macros, OLE streams, and binary blobs with YARA scanning and suspicion scoring.
+
+    **Language:** Python · **Platform:** Cross-platform
   </Card>
-  <Card title="rarADSExtractor" icon="file-search" href="/tools/raradsextractor/overview">
-    Safe Python-only parser for RAR5 archives — carves Alternate Data Streams without invoking vulnerable binaries.
-  </Card>
-  <Card title="Apophis" icon="terminal" href="/tools/apophis/overview">
-    Bash script that generates shellcode runners in multiple formats using DotNetToJScript, ConfuserEx, and more.
-  </Card>
-  <Card title="CSharp Process Injection" icon="code" href="/tools/csharp-injection/overview">
-    Collection of process injection techniques using C# — high/low-level Windows APIs, x86/x64 support.
+  <Card
+    title="rarADSExtractor"
+    icon="file-search"
+    color="#E63946"
+    href="/tools/raradsextractor/overview"
+  >
+    Safe Python-only RAR5 parser that carves **Alternate Data Streams** without invoking vulnerable binaries — built for CVE-2025-8088 / CVE-2025-6218 triage.
+
+    **Language:** Python · **Platform:** Cross-platform
   </Card>
 </CardGroup>
+
+---
+
+## Offensive Security
+
+Tools for shellcode generation, payload delivery, and process injection research.
+
+<CardGroup cols={2}>
+  <Card
+    title="Apophis"
+    icon="terminal"
+    color="#1D3557"
+    href="/tools/apophis/overview"
+  >
+    Bash script leveraging DotNetToJScript, ConfuserEx, and Mono to generate shellcode runners in **10+ formats** — XOR, Caesar, 3DES, AES, MSI, HTA, JS, XSL, ASPX, and InstallUtil.
+
+    **Language:** Bash / C# · **Platform:** Linux (Kali)
+  </Card>
+  <Card
+    title="CSharp Process Injection"
+    icon="code"
+    color="#1D3557"
+    href="/tools/csharp-injection/overview"
+  >
+    Seven process injection techniques in C# covering high/low-level Windows APIs — from `CreateRemoteThread` to NT-only syscalls. Supports x86 and x64 with debugging helpers.
+
+    **Language:** C# · **Platform:** Windows
+  </Card>
+</CardGroup>
+
+---
+
+## Tool Index
+
+| Tool | Category | Language | Platform | Version |
+|------|----------|----------|----------|---------|
+| [dmpHunter](/tools/dmphunter/overview) | DFIR / Memory Forensics | Python | Cross-platform | v0.2.0 |
+| [accdu_inspector](/tools/accdu-inspector/overview) | DFIR / Malware Analysis | Python | Cross-platform | v1.1 |
+| [rarADSExtractor](/tools/raradsextractor/overview) | DFIR / Threat Hunting | Python | Cross-platform | — |
+| [Apophis](/tools/apophis/overview) | Offensive / Payload Gen | Bash / C# | Linux | — |
+| [CSharp Process Injection](/tools/csharp-injection/overview) | Offensive / Research | C# | Windows | — |
+
+---
+
+## Resources
+
+<CardGroup cols={3}>
+  <Card title="GitHub" icon="github" href="https://github.com/tasox">
+    Browse all source repositories, open issues, and contribute.
+  </Card>
+  <Card title="Twitter / X" icon="x-twitter" href="https://x.com/taso_x">
+    Follow for new tool releases and security research updates.
+  </Card>
+  <Card title="Exploit-DB" icon="database" href="https://www.exploit-db.com">
+    Referenced exploit database for vulnerability research context.
+  </Card>
+</CardGroup>
+
+---
+
+<Note>
+  All tools are released under open-source licenses. Review each repository's LICENSE file before use in production or commercial environments. **Use responsibly.**
+</Note>
