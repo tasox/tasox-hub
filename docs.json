@@ -42,6 +42,7 @@
       {
         "group": "triage-llm-lab",
         "icon": "flask",
+        "collapsed": true,
         "pages": [
           "tools/triage-llm-lab/overview",
           "tools/triage-llm-lab/architecture",
@@ -84,6 +85,7 @@
       {
         "group": "TI Agent",
         "icon": "shield",
+        "collapsed": true,
         "pages": [
           "tools/ti-agent/overview",
           "tools/ti-agent/install",
@@ -102,6 +104,7 @@
       {
         "group": "dmpHunter",
         "icon": "search",
+        "collapsed": true,
         "pages": [
           "tools/dmphunter/overview",
           "tools/dmphunter/install",
@@ -131,6 +134,7 @@
       {
         "group": "accdu_inspector",
         "icon": "shield-alert",
+        "collapsed": true,
         "pages": [
           "tools/accdu-inspector/overview",
           "tools/accdu-inspector/install",
@@ -155,6 +159,7 @@
       {
         "group": "rarADSExtractor",
         "icon": "file-search",
+        "collapsed": true,
         "pages": [
           "tools/raradsextractor/overview",
           "tools/raradsextractor/how-it-works",
@@ -164,6 +169,7 @@
       {
         "group": "Apophis",
         "icon": "terminal",
+        "collapsed": true,
         "pages": [
           "tools/apophis/overview",
           "tools/apophis/install",
@@ -192,6 +198,7 @@
       {
         "group": "Browser Extension",
         "icon": "puzzle",
+        "collapsed": true,
         "pages": [
           "tools/browser-extension/overview",
           "tools/browser-extension/install",
