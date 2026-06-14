@@ -9,20 +9,24 @@ icon: "network"
 ```
                     🌐 Internet / Anthropic API
                             │
-   ┌─────────────────┐   SSH / Host-only    ┌─────────────────┐
-   │ VM1              │   192.168.56.0/24    │ VM2              │
-   │ Ubuntu 24.04     │ ───────────────────► │ REMnux           │
-   │ Claude Code +    │                      │ Analysis Tools + │
-   │ MCP Servers      │                      │ Ghidra (Docker)  │
-   │ NAT + Host-only  │                      │ Host-only only   │
-   └─────────────────┘                      └─────────────────┘
+   ┌─────────────────┐   Host-only 192.168.56.0/24
+   │ VM1 — Ubuntu    │──────────┬──────────────────┐
+   │ Claude Code     │          │                  │
+   │ MCP Servers     │          ▼                  ▼
+   │ NAT + Host-only │  ┌───────────────┐  ┌──────────────┐
+   └─────────────────┘  │ VM2 — REMnux  │  │ VM3 — SIFT   │
+                         │ .56.20        │  │ .56.30        │
+                         │ Static Anal.  │  │ Mem Forensics │
+                         │ Ghidra Docker │  │ Disk Forensics│
+                         └───────────────┘  └──────────────┘
+                              VM4 — Windows 10 (.56.40) — future
 ```
 
 <Warning>
-  **VM1 is the only machine with internet access.** Malware samples are transferred to REMnux via SCP and never executed on VM1. The LLM orchestrates all analysis remotely over SSH.
+  **VM1 is the only machine with internet access.** Samples are transferred to REMnux via SCP and never executed on VM1. Evidence for forensics is placed on SIFT under `/cases/`. The LLM orchestrates all analysis remotely over SSH.
 </Warning>
 
-## Data Flow
+## Data Flow — Malware Analysis
 
 ```
 1. Analyst types prompt in Claude Code (VM1)
@@ -36,8 +40,23 @@ icon: "network"
        │  → run triage / static / Ghidra tools on VM2
        │
 4. Claude synthesizes results
-       │  → cross-references VT report + tool output
        └  → produces structured analysis report
+```
+
+## Data Flow — Digital Forensics
+
+```
+1. Analyst places evidence on SIFT (/cases/)
+       │
+2. Claude calls sift-ssh MCP
+       │  → triage_memory / triage_disk
+       │  → memory_malfind / memory_pslist / memory_netscan
+       │  → timeline_create / disk_list_files / carve_files
+       │
+3. Claude cross-references IOCs with virustotal MCP
+       │
+4. Carved executables transferred to REMnux for static analysis
+       └  → produces forensic report
 ```
 
 ## Network Adapter Configuration
@@ -46,4 +65,5 @@ icon: "network"
 |----|-----------|-----------|
 | VM1 — Ubuntu | NAT (internet) | Host-only VMnet1 (`192.168.56.10`) |
 | VM2 — REMnux | Host-only VMnet1 (`192.168.56.20`) | — |
-| VM3 — Windows *(future)* | Host-only VMnet1 (`192.168.56.30`) | — |
+| VM3 — SIFT | Host-only VMnet1 (`192.168.56.30`) | — |
+| VM4 — Windows *(future)* | Host-only VMnet1 (`192.168.56.40`) | — |

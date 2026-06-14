@@ -6,13 +6,16 @@ icon: "circle-help"
 
 | Issue | Cause | Fix |
 |-------|-------|-----|
-| SSH connection refused | SSH service not running or wrong IP | Run `sudo systemctl start ssh` on REMnux. Verify IP with `ip a`. |
+| SSH connection refused | SSH service not running or wrong IP | Run `sudo systemctl start ssh` on REMnux/SIFT. Verify IP with `ip a`. |
 | MCP shows "Failed to connect" | Node.js path wrong or build not compiled | Run `npx tsc` in `~/mcp/remnux-mcp`. Re-register with `claude mcp remove` then `add`. |
 | Ghidra returns "Unauthorized" | Auth token not passed through SSH layers | Use the `ghidra-scripts` wrapper approach — do not pass token directly via `docker exec`. |
 | Ghidra container crashes on start | Binding to `0.0.0.0` without auth token | Always set `GHIDRA_MCP_AUTH_TOKEN` when using `GHIDRA_MCP_BIND_ADDRESS=0.0.0.0`. |
 | MCP not visible in Claude session | Registered with project scope, not user scope | Re-register with `--scope user`. Check `~/.claude.json` for duplicate entries. |
 | SSH tunnel lost after reboot | Tunnel not persistent | Add to `~/.bashrc`: `ssh -i ~/.ssh/remnux_key -N -L 8089:127.0.0.1:8089 remnux@192.168.56.20 &` |
-| npm install hangs on REMnux | Registry blocked (REMnux has no internet) | Install on VM1, then `scp node_modules` to REMnux. Or temporarily enable NAT. |
+| npm install hangs on REMnux | Registry blocked (no internet) | Install on VM1, then `scp node_modules` to REMnux. Or temporarily enable NAT. |
+| sift-ssh MCP not connecting | Wrong username or key path | SIFT default user is `sansforensics` not `ubuntu`. Verify: `ssh -i ~/.ssh/sift_key sansforensics@192.168.56.30` |
+| Volatility3 returns no output | Wrong OS profile or memory image path | Try `vol -f image.dmp windows.info` first to detect OS. Use full absolute path to memory image. |
+| netplan apply fails on SIFT | Syntax error or nano not installed | Use `sudo tee /etc/netplan/...` instead of nano. Check interface name with `ip a` first. |
 
 ## Security Notes
 

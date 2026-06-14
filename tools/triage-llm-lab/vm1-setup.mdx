@@ -66,22 +66,28 @@ cat > ~/malware-analysis/CLAUDE.md << 'EOF'
 
 ## Startup
 At the start of every session, list all available tools from remnux-ssh MCP grouped
-by their category, then list all available virustotal MCP tools with a short description.
+by their category, list all available tools from sift-ssh MCP grouped by their category,
+then list all available virustotal MCP tools with a short description.
 After showing the full list, wait for the next instruction.
 
-## REMnux VM
+## REMnux VM (Static Analysis)
 - Host: 192.168.56.20
 - User: remnux
 - SSH key: /home/tasox/.ssh/remnux_key
-
-## Directories
 - Intake (zip files):  /home/remnux/intake/
 - Samples (unzipped): /home/remnux/samples/
 - Ghidra maps /home/remnux/samples/ → /data/
 
+## SIFT VM (Digital Forensics)
+- Host: 192.168.56.30
+- User: sansforensics
+- SSH key: /home/tasox/.ssh/sift_key
+- Cases directory: /cases/
+
 ## Rules
 - Never store or execute samples on VM1 (this machine)
 - Samples only live in /home/remnux/samples/ on REMnux
+- Evidence files live in /cases/ on SIFT
 - Always revert REMnux snapshot after each analysis session
 EOF
 ```
@@ -96,7 +102,8 @@ lab() {
   echo "Loading malware analysis lab..."
   claude "Show all available tools for this malware analysis lab grouped by category:
 1. List all tools from remnux-ssh MCP grouped by their [CATEGORY] tag
-2. List all tools from virustotal MCP with a short description of each
+2. List all tools from sift-ssh MCP grouped by their [CATEGORY] tag
+3. List all tools from virustotal MCP with a short description of each
 After showing the full list, wait for my next instruction."
 }
 EOF

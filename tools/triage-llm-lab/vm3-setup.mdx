@@ -1,0 +1,90 @@
+---
+title: "VM3 — SIFT Workstation"
+description: "Import SIFT Workstation and configure it for AI-driven digital forensics."
+icon: "hard-drive"
+---
+
+Import the SIFT Workstation OVA into VMware, then install additional tools while NAT is still active. Switch to host-only **only** after all tools are installed.
+
+**Default credentials:** `sansforensics` / `forensics`
+
+## Step 1 — Import SIFT OVA
+
+In VMware: **File → Open** → select the SIFT `.ova` file → Import. Allocate 4 GB RAM, 2 vCPUs, and 80 GB disk.
+
+## Step 2 — Enable SSH & VMware Tools
+
+```bash
+# Enable copy/paste (VMware Tools)
+sudo apt install -y open-vm-tools open-vm-tools-desktop
+
+# Enable SSH server
+sudo systemctl enable ssh --now
+
+# Verify SSH is listening
+sudo ss -tlnp | grep 22
+```
+
+## Step 3 — Verify Core Forensic Tools
+
+```bash
+vol -h 2>/dev/null | head -3       # Volatility3
+fls --version                       # Sleuthkit
+log2timeline.py --version           # Plaso
+bulk_extractor --version
+foremost -V
+rip.pl --help 2>&1 | head -3
+dcfldd --version
+ssdeep -V
+```
+
+## Step 4 — Install Additional Tools
+
+```bash
+sudo apt install -y sleuthkit yara python3-yara dcfldd hashdeep ssdeep \
+  exiftool libewf2t64 afflib-tools python3-registry
+
+pip3 install construct dissect.cstruct --break-system-packages
+```
+
+## Step 5 — Create Cases Directory
+
+```bash
+sudo mkdir -p /cases/carved /cases/dumps /cases/recovered
+sudo chown -R sansforensics:sansforensics /cases
+```
+
+Place memory dumps at `/cases/memory.dmp`, disk images at `/cases/disk.dd`, etc.
+
+## Step 6 — Set Static IP
+
+Check the host-only interface name with `ip a`, then edit the netplan config:
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [192.168.56.30/24]
+```
+
+```bash
+sudo netplan apply
+ping -c 3 192.168.56.10   # verify VM1 is reachable
+```
+
+## Step 7 — SSH Key from VM1
+
+```bash
+# On VM1
+ssh-keygen -t ed25519 -f ~/.ssh/sift_key -N "" -C "vm1-to-sift"
+ssh-copy-id -i ~/.ssh/sift_key.pub sansforensics@192.168.56.30
+
+# Test
+ssh -i ~/.ssh/sift_key sansforensics@192.168.56.30 "uname -a && echo SSH OK"
+```
+
+## Step 8 — Switch to Host-Only
+
+In VMware settings: set the SIFT network adapter to **Host-only only**. SIFT should no longer have internet access after this step.

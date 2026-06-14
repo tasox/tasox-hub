@@ -1,0 +1,73 @@
+---
+title: "sift-ssh MCP"
+description: "Build and register the sift-ssh MCP server — gives Claude direct access to SIFT forensic tools over SSH."
+icon: "hard-drive"
+---
+
+The `sift-ssh` MCP follows the same pattern as `remnux-ssh`. Build it on VM1, then register it with Claude Code.
+
+## Step 1 — Create and Build
+
+```bash
+# On VM1
+mkdir -p ~/mcp/sift-mcp/src
+cd ~/mcp/sift-mcp
+
+npm init -y
+npm install @modelcontextprotocol/sdk ssh2 zod
+npm install -D typescript @types/node @types/ssh2
+npm pkg set type="module"
+
+cat > tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "build",
+    "rootDir": "src",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
+EOF
+
+# Place src/index.ts, then build
+npx tsc
+```
+
+## Step 2 — Register with Claude Code
+
+```bash
+claude mcp add sift-ssh \
+  --scope user \
+  -- node /home/$USER/mcp/sift-mcp/build/index.js \
+  --host 192.168.56.30 \
+  --username sansforensics \
+  --private-key /home/$USER/.ssh/sift_key
+
+# Verify
+claude mcp list | grep sift
+```
+
+## Step 3 — Test Connectivity
+
+```
+Use sift-ssh run_command to run: uname -a && vol -h 2>/dev/null | head -3
+```
+
+Expected: SIFT kernel version + Volatility3 help output.
+
+## Available Tool Groups
+
+| Group | Tag | Tools | Use when |
+|-------|-----|-------|----------|
+| Utility | `[UTILITY]` | `run_command`, `list_cases`, `hash_file` | Case management, hashing evidence |
+| Memory Forensics | `[MEMORY]` | `memory_info`, `memory_pslist`, `memory_netscan`, `memory_malfind`, `memory_cmdline`, `memory_dlllist`, `memory_handles`, `memory_registry`, `memory_dump_process`, `triage_memory` | Windows/Linux memory dumps (.dmp, .raw) |
+| Disk Forensics | `[DISK]` | `disk_info`, `disk_list_files`, `disk_recover_files`, `disk_extract_file`, `triage_disk` | Disk images (.dd, .E01) |
+| Timeline Analysis | `[TIMELINE]` | `timeline_create`, `timeline_filter`, `timeline_search` | Super-timeline creation and investigation |
+| Artifact Extraction | `[ARTIFACT]` | `extract_artifacts`, `carve_files`, `forensic_copy` | Bulk extraction, file carving, forensic imaging |
+| Registry Forensics | `[REGISTRY]` | `registry_analyze`, `registry_autoruns`, `registry_useractivity` | Windows registry hive analysis |
+| Triage | `[TRIAGE]` | `triage_case`, `triage_memory`, `triage_disk` | First look at any new evidence file |

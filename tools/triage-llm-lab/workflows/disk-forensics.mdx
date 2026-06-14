@@ -1,0 +1,23 @@
+---
+title: "Disk Image Forensics"
+description: "Investigate disk images with Sleuthkit, Plaso, and file carving via the sift-ssh MCP."
+icon: "hard-drive"
+---
+
+```
+Investigate the disk image at /cases/disk.dd on SIFT:
+
+1. Use sift-ssh hash_file to verify evidence integrity
+2. Use sift-ssh triage_disk to get partition layout and filesystem info
+3. Use sift-ssh disk_list_files to browse the file system
+4. Use sift-ssh timeline_create to build a super-timeline
+5. Use sift-ssh timeline_search to find activity around the incident timeframe
+6. Use sift-ssh carve_files to recover deleted executables
+7. Use sift-ssh extract_artifacts for bulk IOC extraction
+8. Transfer any carved executables to REMnux for static analysis
+9. Summarize: timeline of events, suspicious files, IOCs
+```
+
+<Tip>
+  Carved executables land in `/cases/carved/`. Transfer them to REMnux via SCP and run `remnux-ssh triage_full` to continue the investigation.
+</Tip>

@@ -4,7 +4,7 @@ description: "AI-powered malware and forensics analysis lab orchestrated through
 icon: "flask"
 ---
 
-**triage-llm-lab** is a three-VM isolated sandbox that combines Claude Code with REMnux analysis tools, Ghidra decompilation, and VirusTotal intelligence — all orchestrated through MCP servers from a clean Ubuntu host.
+**triage-llm-lab** is a four-VM isolated sandbox that combines Claude Code with REMnux static analysis, SIFT Workstation digital forensics, Ghidra decompilation, and VirusTotal intelligence — all orchestrated through MCP servers from a clean Ubuntu host.
 
 <Info>
   [GitHub Repository](https://github.com/tasox/triage-llm-lab)
@@ -13,20 +13,20 @@ icon: "flask"
 | | |
 |---|---|
 | **Hypervisor** | VMware Workstation / Fusion |
-| **VMs** | Ubuntu 24.04 + REMnux + SIFT (Forensics) + Windows (future) |
+| **VMs** | Ubuntu 24.04 + REMnux + SIFT Workstation + Windows 10 (future) |
 | **LLM** | Claude Code (Sonnet) |
 
 ## Key Design Principles
 
 <CardGroup cols={2}>
-  <Card title="Air-Gapped Analysis VM" icon="shield-off">
-    REMnux has **no internet access**. Samples never touch the LLM host — they only live on the isolated REMnux VM.
+  <Card title="Air-Gapped Analysis VMs" icon="shield-off">
+    REMnux and SIFT have **no internet access**. Samples never touch the LLM host — they live only on the isolated analysis VMs.
   </Card>
   <Card title="MCP Orchestration" icon="network">
-    Claude Code controls REMnux tools remotely over SSH via custom MCP servers — no manual command-line switching.
+    Claude Code controls all VMs remotely over SSH via custom MCP servers — no manual command-line switching.
   </Card>
   <Card title="97+ Analysis Tools" icon="wrench">
-    Static analysis, YARA, Ghidra decompilation, .NET reversing, Office macro emulation, JS deobfuscation, and more.
+    Static analysis, YARA, Ghidra decompilation, .NET reversing, Office macro emulation, JS deobfuscation, memory forensics, disk imaging, and more.
   </Card>
   <Card title="VirusTotal Integration" icon="search">
     Hash lookups, file reports, behavioral analysis, and sample downloads (Premium) via native MCP tools.
@@ -38,13 +38,15 @@ icon: "flask"
 | VM | OS | Role | Network | Internet |
 |----|----|------|---------|----------|
 | `VM1` | Ubuntu 24.04 LTS | Claude Code + MCP orchestration host | NAT + Host-only `192.168.56.10` | ✅ Yes |
-| `VM2` | REMnux | Static analysis, Ghidra, deobfuscation | Host-only only `192.168.56.20` | ❌ No |
-| `VM3` | Windows 10 | Forensic analysis *(future)* | Host-only only `192.168.56.30` | ❌ No |
+| `VM2` | REMnux | Static malware analysis, Ghidra, deobfuscation | Host-only `192.168.56.20` | ❌ No |
+| `VM3` | SIFT Workstation | Memory forensics, disk forensics, timelines | Host-only `192.168.56.30` | ❌ No |
+| `VM4` | Windows 10 | Dynamic sandbox *(future)* | Host-only `192.168.56.40` | ❌ No |
 
 ## MCP Servers
 
 | MCP Server | Purpose |
 |------------|---------|
-| `remnux-ssh` | Run all REMnux analysis tools remotely over SSH |
+| `remnux-ssh` | Run all REMnux static analysis tools remotely over SSH |
+| `sift-ssh` | Run SIFT Workstation forensic tools over SSH (Volatility3, Sleuthkit, Plaso) |
 | `virustotal` | Hash lookups, file reports, behavioral analysis, sample downloads |
 | `ghidra-mcp` | Headless Ghidra decompilation via Docker (accessed through `remnux-ssh`) |

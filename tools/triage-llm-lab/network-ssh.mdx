@@ -12,6 +12,7 @@ In VMware: **VM → Settings → Network Adapter**. For VM1, add a second adapte
 |----|-----------|-----------|
 | VM1 — Ubuntu | NAT (internet) | Host-only VMnet1 |
 | VM2 — REMnux | Host-only VMnet1 only | — |
+| VM3 — SIFT | Host-only VMnet1 only | — |
 
 ## Static IP — VM1 (Ubuntu)
 
@@ -55,25 +56,37 @@ sudo netplan apply
 ping -c 3 192.168.56.10   # verify connectivity to VM1
 ```
 
+## Static IP — VM3 (SIFT)
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [192.168.56.30/24]
+```
+
+```bash
+sudo netplan apply
+ping -c 3 192.168.56.10   # verify connectivity to VM1
+```
+
 ---
 
 ## SSH Key Setup
 
-### 1. Generate key on VM1
+### REMnux
 
 ```bash
+# On VM1 — generate dedicated key
 ssh-keygen -t ed25519 -f ~/.ssh/remnux_key -N "" -C "vm1-to-remnux"
-```
 
-### 2. Copy public key to REMnux
-
-```bash
+# Copy to REMnux
 ssh-copy-id -i ~/.ssh/remnux_key.pub remnux@192.168.56.20
 ```
 
-### 3. Create SSH config on VM1
-
-`~/.ssh/config`:
+`~/.ssh/config` entry:
 
 ```
 Host remnux
@@ -83,8 +96,32 @@ Host remnux
     StrictHostKeyChecking no
 ```
 
-### 4. Test
-
 ```bash
 ssh remnux "uname -a && echo SSH OK"
+```
+
+### SIFT Workstation
+
+Default credentials: `sansforensics` / `forensics`
+
+```bash
+# On VM1 — generate dedicated key for SIFT
+ssh-keygen -t ed25519 -f ~/.ssh/sift_key -N "" -C "vm1-to-sift"
+
+# Copy to SIFT
+ssh-copy-id -i ~/.ssh/sift_key.pub sansforensics@192.168.56.30
+```
+
+`~/.ssh/config` entry:
+
+```
+Host sift
+    HostName 192.168.56.30
+    User sansforensics
+    IdentityFile ~/.ssh/sift_key
+    StrictHostKeyChecking no
+```
+
+```bash
+ssh sift "uname -a && vol -h 2>/dev/null | head -3"
 ```

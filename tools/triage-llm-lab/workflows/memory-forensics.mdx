@@ -1,0 +1,22 @@
+---
+title: "Memory Forensics"
+description: "Analyze Windows/Linux memory dumps with Volatility3 via the sift-ssh MCP."
+icon: "cpu"
+---
+
+```
+Analyze the memory dump at /cases/memory.dmp on SIFT:
+
+1. Use sift-ssh triage_memory on /cases/memory.dmp
+2. Identify any suspicious processes from pslist (unknown names, unusual paths)
+3. Use sift-ssh memory_malfind to find injected code
+4. For any suspicious PIDs found, use sift-ssh memory_cmdline and memory_dlllist
+5. Use sift-ssh memory_netscan to identify C2 connections
+6. Cross-reference any IPs/domains with virustotal
+7. Use sift-ssh memory_dump_process to extract suspicious process for static analysis
+8. Summarize: compromised processes, IOCs, attacker activity
+```
+
+<Tip>
+  Transfer any extracted process dumps from `/cases/dumps/` to REMnux via SCP for static analysis with the `remnux-ssh` MCP.
+</Tip>
