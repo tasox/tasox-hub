@@ -208,8 +208,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/images/witch-king.jpg",
+    "dark": "/images/witch-king.jpg"
   },
   "navbar": {
     "links": [],
