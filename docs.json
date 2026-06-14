@@ -30,132 +30,22 @@
           "anchor": "GitHub",
           "icon": "github",
           "href": "https://github.com/tasox"
+        },
+        {
+          "anchor": "X / Twitter",
+          "icon": "x-twitter",
+          "href": "https://x.com/taso_x"
         }
       ]
     },
-    "tabs": [
+    "groups": [
       {
-        "tab": "dmpHunter",
-        "icon": "search",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "tools/dmphunter/overview",
-              "tools/dmphunter/install",
-              "tools/dmphunter/quickstart"
-            ]
-          },
-          {
-            "group": "Command Reference",
-            "pages": [
-              "tools/dmphunter/commands/memmap",
-              "tools/dmphunter/commands/handles",
-              "tools/dmphunter/commands/threads",
-              "tools/dmphunter/commands/modules",
-              "tools/dmphunter/commands/strings",
-              "tools/dmphunter/commands/scan",
-              "tools/dmphunter/commands/net",
-              "tools/dmphunter/commands/dump"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "tools/dmphunter/recipes",
-              "tools/dmphunter/troubleshooting"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "accdu_inspector",
-        "icon": "shield-alert",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "tools/accdu-inspector/overview",
-              "tools/accdu-inspector/install",
-              "tools/accdu-inspector/how-it-works"
-            ]
-          },
-          {
-            "group": "Reference",
-            "pages": [
-              "tools/accdu-inspector/cli-reference",
-              "tools/accdu-inspector/scoring",
-              "tools/accdu-inspector/output-structure"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "tools/accdu-inspector/workflows",
-              "tools/accdu-inspector/best-practices"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "rarADSExtractor",
-        "icon": "file-search",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "tools/raradsextractor/overview",
-              "tools/raradsextractor/how-it-works",
-              "tools/raradsextractor/usage"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Apophis",
-        "icon": "terminal",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "tools/apophis/overview",
-              "tools/apophis/install",
-              "tools/apophis/usage"
-            ]
-          },
-          {
-            "group": "Shellcode Runners",
-            "pages": [
-              "tools/apophis/runners/3des",
-              "tools/apophis/runners/amsi-bypass",
-              "tools/apophis/runners/dotnet-script",
-              "tools/apophis/runners/confuserex",
-              "tools/apophis/runners/msi",
-              "tools/apophis/runners/installutil",
-              "tools/apophis/runners/aes"
-            ]
-          },
-          {
-            "group": "Reference",
-            "pages": [
-              "tools/apophis/downloaders",
-              "tools/apophis/reflection"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "triage-llm-lab",
+        "group": "triage-llm-lab",
         "icon": "flask",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "tools/triage-llm-lab/overview",
-              "tools/triage-llm-lab/architecture",
-              "tools/triage-llm-lab/prerequisites"
-            ]
-          },
+        "pages": [
+          "tools/triage-llm-lab/overview",
+          "tools/triage-llm-lab/architecture",
+          "tools/triage-llm-lab/prerequisites",
           {
             "group": "VM Setup",
             "pages": [
@@ -192,17 +82,12 @@
         ]
       },
       {
-        "tab": "TI Agent",
+        "group": "TI Agent",
         "icon": "shield",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "tools/ti-agent/overview",
-              "tools/ti-agent/install",
-              "tools/ti-agent/quickstart"
-            ]
-          },
+        "pages": [
+          "tools/ti-agent/overview",
+          "tools/ti-agent/install",
+          "tools/ti-agent/quickstart",
           {
             "group": "Reference",
             "pages": [
@@ -215,22 +100,102 @@
         ]
       },
       {
-        "tab": "Browser Extension",
-        "icon": "puzzle",
-        "groups": [
+        "group": "dmpHunter",
+        "icon": "search",
+        "pages": [
+          "tools/dmphunter/overview",
+          "tools/dmphunter/install",
+          "tools/dmphunter/quickstart",
           {
-            "group": "Getting Started",
+            "group": "Command Reference",
             "pages": [
-              "tools/browser-extension/overview",
-              "tools/browser-extension/install"
+              "tools/dmphunter/commands/memmap",
+              "tools/dmphunter/commands/handles",
+              "tools/dmphunter/commands/threads",
+              "tools/dmphunter/commands/modules",
+              "tools/dmphunter/commands/strings",
+              "tools/dmphunter/commands/scan",
+              "tools/dmphunter/commands/net",
+              "tools/dmphunter/commands/dump"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "tools/dmphunter/recipes",
+              "tools/dmphunter/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "accdu_inspector",
+        "icon": "shield-alert",
+        "pages": [
+          "tools/accdu-inspector/overview",
+          "tools/accdu-inspector/install",
+          "tools/accdu-inspector/how-it-works",
+          {
+            "group": "Reference",
+            "pages": [
+              "tools/accdu-inspector/cli-reference",
+              "tools/accdu-inspector/scoring",
+              "tools/accdu-inspector/output-structure"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "tools/accdu-inspector/workflows",
+              "tools/accdu-inspector/best-practices"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "rarADSExtractor",
+        "icon": "file-search",
+        "pages": [
+          "tools/raradsextractor/overview",
+          "tools/raradsextractor/how-it-works",
+          "tools/raradsextractor/usage"
+        ]
+      },
+      {
+        "group": "Apophis",
+        "icon": "terminal",
+        "pages": [
+          "tools/apophis/overview",
+          "tools/apophis/install",
+          "tools/apophis/usage",
+          {
+            "group": "Shellcode Runners",
+            "pages": [
+              "tools/apophis/runners/3des",
+              "tools/apophis/runners/amsi-bypass",
+              "tools/apophis/runners/dotnet-script",
+              "tools/apophis/runners/confuserex",
+              "tools/apophis/runners/msi",
+              "tools/apophis/runners/installutil",
+              "tools/apophis/runners/aes"
             ]
           },
           {
             "group": "Reference",
             "pages": [
-              "tools/browser-extension/troubleshooting"
+              "tools/apophis/downloaders",
+              "tools/apophis/reflection"
             ]
           }
+        ]
+      },
+      {
+        "group": "Browser Extension",
+        "icon": "puzzle",
+        "pages": [
+          "tools/browser-extension/overview",
+          "tools/browser-extension/install",
+          "tools/browser-extension/troubleshooting"
         ]
       }
     ]
