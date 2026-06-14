@@ -1,0 +1,56 @@
+---
+title: "Database"
+description: "SQLite schema used by TI Agent for persistence."
+icon: "database"
+---
+
+The SQLite database (`ti-agent.db`) is created automatically in the same directory as `server.js` on first run. The server runs non-destructive migrations at startup — `ALTER TABLE` statements are wrapped in `try/catch` so already-existing columns are silently skipped.
+
+## `config`
+
+Key/value store for all UI preferences. Values are JSON-serialized.
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `selectedIds` | `string[]` | Feed IDs selected for analysis |
+| `selectedModelId` | `string` | Active Claude model |
+| `query` | `string` | Analysis focus prompt |
+| `schedule` | `string` | Schedule preference label |
+| `maxTokens` | `number` | Claude max output tokens |
+| `datePreset` | `number` | Index into date preset array |
+| `customFrom` / `customTo` | `string` | Custom date range (YYYY-MM-DD) |
+| `disabledIds` | `string[]` | Feeds temporarily disabled |
+| `deletedIds` | `string[]` | Feeds permanently removed |
+
+## `custom_feeds`
+
+User-added RSS/Atom feeds.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | TEXT PK | Unique identifier |
+| `name` | TEXT | Display name |
+| `xmlUrl` | TEXT | RSS/Atom feed URL |
+| `url` | TEXT | Human-readable site URL |
+| `category` | TEXT | Feed category |
+| `color` | TEXT | Hex color for UI |
+| `created_at` | TEXT | ISO timestamp |
+
+## `reports`
+
+Generated briefings with full metadata.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK | Auto-increment |
+| `timestamp` | TEXT | Human-readable generation time |
+| `query` | TEXT | Analysis focus used |
+| `date_from` / `date_to` | TEXT | Date window |
+| `sources` | INTEGER | Number of feeds selected |
+| `model_id` / `model_name` | TEXT | Claude model used |
+| `input_tokens` / `output_tokens` | INTEGER | Actual token usage |
+| `input_cost` / `output_cost` / `total_cost` | REAL | Actual costs in USD |
+| `est_input_tok` / `est_output_tok` / `est_total_cost` | REAL | Pre-flight estimates |
+| `body` | TEXT | Full Markdown report |
+| `source_map` | TEXT | JSON mapping `{"1": {name, url}, ...}` for citations |
+| `created_at` | TEXT | ISO timestamp |

@@ -145,6 +145,29 @@
         ]
       },
       {
+        "tab": "TI Agent",
+        "icon": "shield",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tools/ti-agent/overview",
+              "tools/ti-agent/install",
+              "tools/ti-agent/quickstart"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "tools/ti-agent/api-reference",
+              "tools/ti-agent/database",
+              "tools/ti-agent/exports",
+              "tools/ti-agent/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Browser Extension",
         "icon": "puzzle",
         "groups": [

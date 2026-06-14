@@ -1,0 +1,63 @@
+---
+title: "Installation"
+description: "Install TI Agent and its dependencies."
+icon: "download"
+---
+
+## Requirements
+
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Node.js | **22.x** | Express 5 requires Node 22 |
+| macOS | 12+ | Linux compatible; Windows untested |
+| Anthropic API key | — | `sk-ant-api03-...` format |
+| Xcode CLI tools | — | Required for `better-sqlite3` native build |
+
+## Step 1 — Prerequisites
+
+```bash
+# Install Xcode command line tools (required for better-sqlite3)
+xcode-select --install
+
+# Install Node 22 via Homebrew
+brew install node
+node --version  # should print v22.x.x
+```
+
+## Step 2 — Clone
+
+```bash
+git clone https://github.com/tasox/ti-agent.git
+cd ti-agent
+```
+
+<Warning>
+  **Do not place the project inside iCloud Drive** (`~/Library/Mobile Documents/`). iCloud's sync mechanism interferes with SQLite's WAL journal files and can cause database corruption. Clone into a local path such as `~/Projects/ti-agent`.
+</Warning>
+
+## Step 3 — Install Dependencies
+
+```bash
+npm install
+```
+
+This installs `react`, `react-dom`, `react-scripts`, `express@5`, `cors`, `node-fetch@2`, and `better-sqlite3` in one step.
+
+## Dependencies Reference
+
+### Runtime (npm)
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `express` | `^5.x` | HTTP server — **must be v5**, Express 4 breaks on Node 22 |
+| `cors` | `^2.x` | Cross-origin headers for React dev server on :3000 |
+| `node-fetch` | `@2.x` | RSS feed fetching — **must be v2**, v3 is ESM-only |
+| `better-sqlite3` | `^9.x` | Synchronous SQLite driver — requires native build tools |
+
+### Built-in Node.js Modules
+
+| Module | Used for |
+|--------|---------|
+| `path` | Resolving the DB file path |
+| `fs` | Startup DB file stat check |
+| `zlib` | `deflateRawSync` for building valid `.docx` ZIP archives |

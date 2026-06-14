@@ -1,0 +1,55 @@
+---
+title: "Troubleshooting"
+description: "Common issues and fixes for TI Agent."
+icon: "circle-help"
+---
+
+## `Missing parameter name` crash on `node server.js`
+
+You have Express 4 installed. Upgrade to Express 5:
+
+```bash
+npm install express@5
+```
+
+## `Cannot find module 'node-fetch'`
+
+```bash
+npm install node-fetch@2
+```
+
+Note the `@2` — v3 is ESM-only and incompatible with CommonJS `require()`.
+
+## `better-sqlite3` Fails to Build
+
+**macOS:**
+```bash
+xcode-select --install
+```
+
+**Linux:**
+```bash
+sudo apt install build-essential python3
+```
+
+## DB File Not Created / Not Visible
+
+The DB is created in the same directory as `server.js`. If the project is inside iCloud Drive, iCloud may be syncing the file to the cloud and hiding it locally. Move the project to a local path outside `~/Library/Mobile Documents/`.
+
+## No Articles Found in Window
+
+Most feeds publish infrequently. Try widening the date window to **7d or 14d**. Some feeds require authentication or use non-standard formats and will return zero articles. Check the server terminal — failed feeds are logged with the specific error.
+
+## PDF Exports with White Background
+
+In Chrome's print dialog, enable **Background graphics** (More settings → Background graphics).
+
+## DOCX Opens with "Unreadable Content" Warning
+
+Ensure you are running the latest version of `server.js` — the DOCX is now a proper ZIP archive.
+
+## Security Notes
+
+- The Anthropic API key is **never written to disk or any browser storage** — it lives in React state only and is cleared on every page reload.
+- The backend strips the `apiKey` field from all config saves and exports.
+- The server has **no authentication** and is designed for local single-user use only. Do not expose port 3001 to a network.

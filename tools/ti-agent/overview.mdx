@@ -1,0 +1,67 @@
+---
+title: "Overview"
+description: "AI-powered threat intelligence briefing tool powered by Claude."
+icon: "shield"
+---
+
+**TI Agent** is a full-stack local application that fetches real security articles from RSS/Atom feeds, passes them to Claude for analysis, and produces structured threat intelligence briefings with inline citations linking directly to source articles.
+
+<Info>
+  **Current version:** v1.0 · [GitHub Repository](https://github.com/tasox/ti-agent)
+</Info>
+
+Unlike tools that prompt an LLM with feed URLs and hope for the best, TI Agent **actually fetches and parses the feeds server-side**, filters articles to your chosen date window, and sends the real content to Claude. Every claim in the report traces to a specific article, and every `[N]` citation is a clickable link.
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="97 Built-in Security Feeds" icon="rss">
+    Across 6 categories: IOC Feeds, Vulnerabilities, Threat Intel, Red|Blue|Purple, Security News, CTF & Learning.
+  </Card>
+  <Card title="Real RSS/Atom Ingestion" icon="download">
+    Articles fetched and parsed server-side, filtered to your date window before Claude sees them.
+  </Card>
+  <Card title="Inline Citations" icon="link">
+    Every factual claim is followed by `[N]` badges linking to the source article. References rebuilt from the source map — no duplicates.
+  </Card>
+  <Card title="4 Export Formats" icon="file-down">
+    Markdown, HTML, PDF (dark theme, print-ready), DOCX (valid ZIP-based `.docx`).
+  </Card>
+  <Card title="Cost Tracking" icon="chart-bar">
+    Per-run token usage, actual vs. estimated cost accuracy, and 30-day budget projections.
+  </Card>
+  <Card title="Full Persistence" icon="database">
+    All reports, config, and custom feeds saved to SQLite — survive server restarts.
+  </Card>
+  <Card title="Custom Feeds" icon="plus-circle">
+    Add any RSS/Atom feed URL with a name and category.
+  </Card>
+  <Card title="4 Claude Models" icon="cpu">
+    Haiku 4.5 (default), Sonnet 4.5, Sonnet 4.6, Opus 4.5.
+  </Card>
+</CardGroup>
+
+## Report Sections
+
+Every generated briefing follows this structure:
+
+| # | Section | Description |
+|---|---------|-------------|
+| 1 | Data Window | Date range covered and article count |
+| 2 | Executive Summary | 3-4 sentence CISO-level summary with citations |
+| 3 | Top Threats | Up to 5 ranked threats (CRITICAL / HIGH / MEDIUM) |
+| 4 | IOC Highlights | Real IOCs from articles — IPs, domains, hashes |
+| 5 | CVE Watch | Explicitly mentioned CVEs in table format |
+| 6 | Threat Actor Spotlight | Named actors with TTPs and MITRE IDs |
+| 7 | Analyst Recommendations | 3 actionable steps |
+| 8 | MITRE ATT&CK Coverage | Techniques in table format |
+| 9 | References | Complete deduplicated list of cited articles |
+
+## Supported Claude Models
+
+| Model | API ID | Input | Output | Best for |
+|-------|--------|-------|--------|---------|
+| Haiku 4.5 *(default)* | `claude-haiku-4-5-20251001` | $1.00/1M | $5.00/1M | Daily briefings, high volume |
+| Sonnet 4.5 | `claude-sonnet-4-5-20251101` | $3.00/1M | $15.00/1M | Balanced quality and cost |
+| Sonnet 4.6 | `claude-sonnet-4-6` | $3.00/1M | $15.00/1M | Latest capabilities |
+| Opus 4.5 | `claude-opus-4-5` | $5.00/1M | $25.00/1M | Deep analysis, complex reports |

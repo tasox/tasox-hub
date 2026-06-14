@@ -1,0 +1,68 @@
+---
+title: "Quick Start"
+description: "Run TI Agent and generate your first briefing."
+icon: "rocket"
+---
+
+## Running
+
+Open **two terminal windows** in the project directory:
+
+```bash
+# Terminal 1 — backend (port 3001)
+node server.js
+```
+
+Expected output:
+```
+📂  DB path: /Users/you/ti-agent/ti-agent.db
+📦  DB file size: 32768 bytes
+📦  Database ready at /Users/you/ti-agent/ti-agent.db
+
+✅  TI Agent server → http://localhost:3001
+```
+
+```bash
+# Terminal 2 — frontend (port 3000)
+npm start
+```
+
+Then open **http://localhost:3000** in your browser.
+
+## First Briefing
+
+1. Go to the **⚙ CONFIG** tab
+2. Enter your **Anthropic API key** — kept in memory only, never written to disk
+3. Select your feeds and date window
+4. Click **⚡ GENERATE BRIEFING**
+
+The button cycles through two phases:
+- `◌ FETCHING N FEEDS…` — downloading and parsing RSS/Atom feeds
+- `◌ ANALYZING WITH AI…` — Claude processing the articles
+
+## How It Works
+
+```
+Browser (React)
+  └─ POST /api/fetch-feeds
+       └─ Express :3001
+            1. Fetch all selected feeds in parallel (8s timeout)
+            2. Parse RSS 2.0 / Atom 1.0 XML
+            3. Filter articles to date window
+            4. Cap at 15 articles per feed
+            └─ Return { articles[], errors[] }
+
+  └─ POST /api/analyze
+       └─ Express :3001
+            Proxy to Anthropic API with prompt:
+            - Numbered article list [1]..[N] with title/URL/date/summary
+            - Citation rule: cite [N] after every claim
+            - Structured report sections
+            └─ Claude response streamed back
+
+  └─ Browser renders report
+       - rebuildReferences() strips Claude's References section
+         and rebuilds it from the verified source map
+       - renderMarkdown() renders [N] as clickable links
+       - Report saved to SQLite with source_map JSON
+```

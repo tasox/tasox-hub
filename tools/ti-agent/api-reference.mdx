@@ -1,0 +1,70 @@
+---
+title: "API Reference"
+description: "All REST endpoints exposed by the TI Agent backend."
+icon: "code"
+---
+
+All endpoints run on `http://localhost:3001`.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Server health check, returns DB path |
+| `POST` | `/api/fetch-feeds` | Fetch and parse RSS/Atom feeds for a date window |
+| `POST` | `/api/analyze` | Proxy to Anthropic `/v1/messages` |
+| `GET` | `/api/config` | Load all saved config |
+| `PUT` | `/api/config` | Save config (API key always excluded) |
+| `GET` | `/api/config/export` | Download full config + custom feeds as JSON |
+| `POST` | `/api/config/import` | Restore config from exported JSON |
+| `GET` | `/api/feeds/custom` | List custom feeds |
+| `POST` | `/api/feeds/custom` | Add a custom feed |
+| `DELETE` | `/api/feeds/custom/:id` | Remove a custom feed |
+| `GET` | `/api/reports` | List all reports (no body field) |
+| `GET` | `/api/reports/:id` | Get a single report with body |
+| `POST` | `/api/reports` | Save a generated report |
+| `DELETE` | `/api/reports/:id` | Delete a report |
+| `GET` | `/api/costs` | Get cost ledger rows |
+| `GET` | `/api/reports/:id/export?format=` | Export report (`md` / `html` / `pdf` / `docx`) |
+
+## `POST /api/fetch-feeds`
+
+**Request body:**
+```json
+{
+  "feeds": [
+    {
+      "id": "talos",
+      "name": "Cisco Talos",
+      "xmlUrl": "https://blog.talosintelligence.com/feed",
+      "url": "https://blog.talosintelligence.com"
+    }
+  ],
+  "dateFrom": "2025-01-01",
+  "dateTo": "2025-01-07"
+}
+```
+
+**Response:**
+```json
+{
+  "articles": [
+    {
+      "title": "Article title",
+      "url": "https://...",
+      "date": "2025-01-03",
+      "summary": "First 800 chars of article text...",
+      "feedName": "Cisco Talos",
+      "feedIndex": 1
+    }
+  ],
+  "errors": [
+    { "feed": "Some Feed", "error": "Timeout" }
+  ]
+}
+```
+
+**Feed fetcher behaviour:**
+- All feeds fetched in parallel with `Promise.allSettled`
+- 8-second timeout per feed via `AbortController`
+- Capped at 15 articles per feed
+- Articles outside the date window are filtered out
+- Failed feeds appear in `errors[]` and are noted in the report

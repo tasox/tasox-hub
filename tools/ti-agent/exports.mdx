@@ -1,0 +1,18 @@
+---
+title: "Export Formats"
+description: "Export TI Agent reports in Markdown, HTML, PDF, or DOCX."
+icon: "file-down"
+---
+
+All formats automatically rebuild the References section from the stored `source_map` before exporting — every cited article appears exactly once and no references are missing.
+
+| Format | Citations | Tables | Notes |
+|--------|-----------|--------|-------|
+| `.md` | `[N](url)` markdown hyperlinks | GFM pipe tables | Compatible with Obsidian, GitHub, Typora |
+| `.html` | `<a>` superscript links | `<table>` with dark CSS | Self-contained, dark theme matching the app |
+| `.pdf` | `<a>` superscript links | `<table>` with dark CSS | Opens print dialog — enable **Background graphics** in Chrome |
+| `.docx` | Blue superscript `[N]` text | `<w:tbl>` Word tables | Valid ZIP-based DOCX, opens in Word and LibreOffice |
+
+<Tip>
+For PDF exports, enable **Background graphics** in Chrome's print dialog (More settings → Background graphics) to preserve the dark theme.
+</Tip>
