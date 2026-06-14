@@ -1,0 +1,16 @@
+---
+title: ".NET Assembly Analysis"
+description: "Reverse engineer C#, VB.NET, and F# compiled assemblies."
+icon: "code"
+---
+
+```
+Analyze the .NET sample at /home/remnux/samples/agent.exe:
+
+1. Use remnux-ssh triage_dotnet for a full initial analysis
+2. Use remnux-ssh dotnet_decompile to get the full C# source
+3. Use remnux-ssh dotnet_strings to find obfuscated strings and C2 indicators
+4. Use remnux-ssh dotnet_resources to check for embedded payloads
+5. Use virustotal get_file_report for detections and community intel
+6. Summarize: obfuscator used, capabilities, IOCs, verdict
+```

@@ -1,0 +1,15 @@
+---
+title: "PyInstaller Sample Analysis"
+description: "Unpack and decompile compiled Python malware."
+icon: "file-code-2"
+---
+
+```
+Analyze the Python binary at /home/remnux/samples/stealer.exe:
+
+1. Use remnux-ssh triage_python on the file
+2. If PyInstaller detected, use pyinstaller_extract to unpack it
+3. Decompile any .pyc files found with python_decompile
+4. Extract C2 configuration from the decompiled source
+5. Cross-reference IOCs with virustotal
+```

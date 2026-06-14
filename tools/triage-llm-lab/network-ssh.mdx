@@ -1,0 +1,90 @@
+---
+title: "Network & SSH Setup"
+description: "Configure static IPs and passwordless SSH between VM1 and VM2."
+icon: "network"
+---
+
+## VMware Adapter Configuration
+
+In VMware: **VM → Settings → Network Adapter**. For VM1, add a second adapter via **Add → Network Adapter → Host-only**.
+
+| VM | Adapter 1 | Adapter 2 |
+|----|-----------|-----------|
+| VM1 — Ubuntu | NAT (internet) | Host-only VMnet1 |
+| VM2 — REMnux | Host-only VMnet1 only | — |
+
+## Static IP — VM1 (Ubuntu)
+
+```bash
+# Find the host-only interface name
+ip a   # look for second adapter, typically ens36
+```
+
+`/etc/netplan/01-network-manager-all.yaml`:
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens33:           # NAT adapter
+      dhcp4: true
+    ens36:           # Host-only adapter
+      dhcp4: no
+      addresses: [192.168.56.10/24]
+```
+
+```bash
+sudo netplan apply
+```
+
+## Static IP — VM2 (REMnux)
+
+`/etc/netplan/01-network-manager-all.yaml`:
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [192.168.56.20/24]
+```
+
+```bash
+sudo netplan apply
+ping -c 3 192.168.56.10   # verify connectivity to VM1
+```
+
+---
+
+## SSH Key Setup
+
+### 1. Generate key on VM1
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/remnux_key -N "" -C "vm1-to-remnux"
+```
+
+### 2. Copy public key to REMnux
+
+```bash
+ssh-copy-id -i ~/.ssh/remnux_key.pub remnux@192.168.56.20
+```
+
+### 3. Create SSH config on VM1
+
+`~/.ssh/config`:
+
+```
+Host remnux
+    HostName 192.168.56.20
+    User remnux
+    IdentityFile ~/.ssh/remnux_key
+    StrictHostKeyChecking no
+```
+
+### 4. Test
+
+```bash
+ssh remnux "uname -a && echo SSH OK"
+```

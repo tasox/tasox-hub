@@ -145,6 +145,53 @@
         ]
       },
       {
+        "tab": "triage-llm-lab",
+        "icon": "flask",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tools/triage-llm-lab/overview",
+              "tools/triage-llm-lab/architecture",
+              "tools/triage-llm-lab/prerequisites"
+            ]
+          },
+          {
+            "group": "VM Setup",
+            "pages": [
+              "tools/triage-llm-lab/vm1-setup",
+              "tools/triage-llm-lab/vm2-setup",
+              "tools/triage-llm-lab/network-ssh"
+            ]
+          },
+          {
+            "group": "MCP Servers",
+            "pages": [
+              "tools/triage-llm-lab/mcp-servers/remnux-ssh",
+              "tools/triage-llm-lab/mcp-servers/virustotal",
+              "tools/triage-llm-lab/mcp-servers/ghidra"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "tools/triage-llm-lab/analysis-tools",
+              "tools/triage-llm-lab/troubleshooting"
+            ]
+          },
+          {
+            "group": "Analysis Workflows",
+            "pages": [
+              "tools/triage-llm-lab/workflows/pe-analysis",
+              "tools/triage-llm-lab/workflows/office-docs",
+              "tools/triage-llm-lab/workflows/js-deobfuscation",
+              "tools/triage-llm-lab/workflows/dotnet-analysis",
+              "tools/triage-llm-lab/workflows/pyinstaller"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "TI Agent",
         "icon": "shield",
         "groups": [

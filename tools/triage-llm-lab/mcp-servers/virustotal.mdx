@@ -1,0 +1,49 @@
+---
+title: "VirusTotal MCP"
+description: "Hash lookups, file reports, behavioral analysis, and sample downloads via VirusTotal."
+icon: "shield-check"
+---
+
+<Info>
+  File download requires a **VirusTotal Premium API key**. Hash lookups and reports work with a free key.
+</Info>
+
+## Setup
+
+```bash
+git clone https://github.com/BurtTheCoder/mcp-virustotal ~/mcp/mcp-virustotal
+cd ~/mcp/mcp-virustotal
+npm install && npm run build
+
+# Register (loads API key from secrets file)
+source ~/.config/malware-lab/secrets.env
+claude mcp add virustotal \
+  --scope user \
+  -e VIRUSTOTAL_API_KEY=$VIRUSTOTAL_API_KEY \
+  -- node /home/$USER/mcp/mcp-virustotal/build/index.js
+```
+
+## Test
+
+Open a Claude session and run:
+```
+Use virustotal MCP to look up hash: 44d88612fea8a8f36de82e1278abb02f
+```
+(EICAR hash — safe to query)
+
+## Available Tools
+
+| Tool | Input | Description | API Tier |
+|------|-------|-------------|----------|
+| `get_file_report` | MD5 / SHA1 / SHA256 | Full detection report — AV verdicts, sandbox scores, file metadata | Free |
+| `get_file_behavior` | SHA256 | Dynamic analysis — network connections, registry changes, dropped files | Free |
+| `get_file_relationship` | SHA256 + relationship | Related files, contacted IPs/domains, execution parents | Free |
+| `get_url_report` | URL | URL reputation, category, detections | Free |
+| `get_ip_report` | IP address | IP reputation, ASN, country, associated malware | Free |
+| `get_domain_report` | Domain | WHOIS, DNS history, associated malware | Free |
+| `search` | VTI query string | Advanced search — supports VTI modifiers e.g. `type:peexe tag:signed` | Free |
+| `download_file` | SHA256 + output path | Download sample as password-protected zip (`infected`) to VM1 | Premium |
+
+<Warning>
+  The `download_file` tool saves samples to `~/downloads/` on VM1 as a zip. Always **transfer to REMnux via `scp`** before unzipping — never extract samples directly on VM1.
+</Warning>

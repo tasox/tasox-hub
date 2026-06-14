@@ -1,0 +1,49 @@
+---
+title: "Architecture"
+description: "Network topology and data flow of the triage-llm-lab."
+icon: "network"
+---
+
+## Network Topology
+
+```
+                    🌐 Internet / Anthropic API
+                            │
+   ┌─────────────────┐   SSH / Host-only    ┌─────────────────┐
+   │ VM1              │   192.168.56.0/24    │ VM2              │
+   │ Ubuntu 24.04     │ ───────────────────► │ REMnux           │
+   │ Claude Code +    │                      │ Analysis Tools + │
+   │ MCP Servers      │                      │ Ghidra (Docker)  │
+   │ NAT + Host-only  │                      │ Host-only only   │
+   └─────────────────┘                      └─────────────────┘
+```
+
+<Warning>
+  **VM1 is the only machine with internet access.** Malware samples are transferred to REMnux via SCP and never executed on VM1. The LLM orchestrates all analysis remotely over SSH.
+</Warning>
+
+## Data Flow
+
+```
+1. Analyst types prompt in Claude Code (VM1)
+       │
+2. Claude calls virustotal MCP
+       │  → download sample → ~/downloads/sample.zip (VM1)
+       │
+3. Claude calls remnux-ssh MCP
+       │  → scp sample.zip → /home/remnux/intake/ (VM2)
+       │  → unzip with password: infected
+       │  → run triage / static / Ghidra tools on VM2
+       │
+4. Claude synthesizes results
+       │  → cross-references VT report + tool output
+       └  → produces structured analysis report
+```
+
+## Network Adapter Configuration
+
+| VM | Adapter 1 | Adapter 2 |
+|----|-----------|-----------|
+| VM1 — Ubuntu | NAT (internet) | Host-only VMnet1 (`192.168.56.10`) |
+| VM2 — REMnux | Host-only VMnet1 (`192.168.56.20`) | — |
+| VM3 — Windows *(future)* | Host-only VMnet1 (`192.168.56.30`) | — |

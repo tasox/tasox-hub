@@ -1,0 +1,73 @@
+---
+title: "Analysis Tools"
+description: "Complete reference of all analysis tools available on REMnux."
+icon: "wrench"
+---
+
+## Static Analysis
+
+| Tool | Description |
+|------|-------------|
+| `file` | Identify file type by magic bytes |
+| `strings` | Extract printable strings |
+| `xxd` | Hex dump files |
+| `diec` / `die` | Detect packers, compilers, protectors |
+| `FLOSS` | Extract obfuscated + stack strings |
+| `CAPA` | MITRE ATT&CK capability detection |
+| `pescanner` | PE header analysis |
+| `exiftool` | File metadata extraction |
+| `binwalk` | Embedded file extraction |
+| `upx` | UPX packer detection / unpacking |
+
+## Office Document Analysis
+
+| Tool | Description |
+|------|-------------|
+| `olevba` | VBA macro extraction and analysis |
+| `oleid` | OLE file indicator detection |
+| `oledump` | OLE stream dumping |
+| `mraptor` | Malicious macro detection |
+| `ViperMonkey` | VBA macro emulation |
+
+## Script Deobfuscation
+
+| Tool | Description |
+|------|-------------|
+| `synchrony` | JavaScript deobfuscation (obfuscator.io) |
+| `js-beautify` | JavaScript formatting |
+
+## ELF / Linux Analysis
+
+| Tool | Description |
+|------|-------------|
+| `readelf` | ELF header and section analysis |
+| `objdump` | Disassembly and symbol inspection |
+| `nm` | Symbol table listing |
+| `ldd` | Shared library dependencies |
+| `strace` / `ltrace` | System and library call tracing |
+
+## Python Malware
+
+| Tool | Description |
+|------|-------------|
+| `pyinstxtractor-ng` | Unpack PyInstaller bundles |
+| `uncompyle6` | Decompile Python `.pyc` bytecode |
+
+## Windows Installer
+
+| Tool | Description |
+|------|-------------|
+| `msiextract` | Extract MSI file contents |
+| `msidump` | Dump MSI database tables |
+| `7z` / `unzip` | Extract MSIX/AppX packages |
+| `cabextract` | Extract Cabinet files |
+
+## .NET Assembly Analysis
+
+| Tool | Description |
+|------|-------------|
+| `ilspycmd` | Decompile .NET assemblies to C# source |
+| `monodis` | Disassemble .NET IL bytecode, extract user strings |
+| `pedump` | PE/CLI header and metadata table analysis |
+| `dnfile` | Python library for .NET metadata parsing |
+| `pefile` | Python PE structure parsing library |

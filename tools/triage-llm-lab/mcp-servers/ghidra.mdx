@@ -1,0 +1,62 @@
+---
+title: "Ghidra MCP (Docker)"
+description: "Headless Ghidra decompilation via Docker on REMnux."
+icon: "code-2"
+---
+
+Run GhidraMCP as a headless Docker container on REMnux. The image is built on VM1 (which has internet) and transferred to REMnux.
+
+## Step 1 — Build Docker Image on VM1
+
+```bash
+sudo apt install -y docker.io
+sudo systemctl start docker
+sudo usermod -aG docker $USER && newgrp docker
+
+git clone https://github.com/bethington/ghidra-mcp ~/mcp/ghidra-mcp
+cd ~/mcp/ghidra-mcp
+
+# Build (takes 5-10 minutes)
+docker build -t ghidra-mcp-headless:latest -f docker/Dockerfile .
+
+# Export to tar
+docker save ghidra-mcp-headless:latest -o /tmp/ghidra-mcp-headless.tar
+ls -lh /tmp/ghidra-mcp-headless.tar
+```
+
+## Step 2 — Transfer to REMnux
+
+```bash
+scp -i ~/.ssh/remnux_key /tmp/ghidra-mcp-headless.tar remnux@192.168.56.20:/home/remnux/
+```
+
+## Step 3 — Load and Run on REMnux
+
+```bash
+# Load image
+docker load -i /home/remnux/ghidra-mcp-headless.tar
+
+# Start container
+docker run -d --name ghidra-mcp --memory 2g \
+  -p 127.0.0.1:8089:8089 \
+  -v /home/remnux/samples:/data \
+  -v ghidra-projects:/projects \
+  -e GHIDRA_MCP_PORT=8089 \
+  -e GHIDRA_MCP_BIND_ADDRESS=0.0.0.0 \
+  -e GHIDRA_MCP_AUTH_TOKEN=ghidra-lab-token \
+  -e JAVA_OPTS=-Xmx2g \
+  ghidra-mcp-headless:latest
+
+# Verify (~20 seconds startup)
+sleep 20
+docker exec ghidra-mcp curl -s http://localhost:8089/get_version
+```
+
+Expected output:
+```json
+{"plugin_version": "5.13.1-headless", "plugin_name": "GhidraMCP Headless", "mode": "headless"}
+```
+
+<Note>
+  Ghidra is not registered as its own MCP server. Access it through the `remnux-ssh` MCP using the `ghidra_*` tool group — this avoids SSH tunnel complexity.
+</Note>

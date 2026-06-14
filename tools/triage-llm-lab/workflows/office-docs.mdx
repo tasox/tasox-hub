@@ -1,0 +1,14 @@
+---
+title: "Office Document Analysis"
+description: "Analyze malicious Office documents with macro emulation."
+icon: "file-spreadsheet"
+---
+
+```
+Analyze the Office document at /home/remnux/samples/invoice.docx:
+
+1. Use remnux-ssh triage_office to run all oletools
+2. Use remnux-ssh vmonkey_analyze to emulate any macros found
+3. Extract all IOCs (URLs, IPs, domains) from the document
+4. Summarize: macro presence, auto-exec triggers, network IOCs, verdict
+```

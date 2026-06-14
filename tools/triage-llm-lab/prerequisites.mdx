@@ -1,0 +1,35 @@
+---
+title: "Prerequisites"
+description: "Hardware, software, and account requirements before building the lab."
+icon: "clipboard-list"
+---
+
+<Warning>
+  Complete **all downloads and package installations** while VMs are on NAT (internet access). Switch REMnux to host-only **only** after all tools are installed.
+</Warning>
+
+## Host Machine Requirements
+
+| Resource | Minimum | Recommended |
+|----------|---------|-------------|
+| RAM | 16 GB | 32 GB |
+| Storage | 100 GB free | 200 GB SSD |
+| CPU | 4 cores | 8 cores with VT-x |
+| Hypervisor | VMware Workstation Pro / Fusion | VMware Workstation Pro / Fusion |
+
+## VM Resource Allocation
+
+| VM | RAM | vCPU | Disk |
+|----|-----|------|------|
+| VM1 — Ubuntu | 4 GB | 2 | 40 GB |
+| VM2 — REMnux | 4 GB | 2 | 60 GB |
+| VM3 — SIFT | 4 GB | 2 | 60 GB |
+| VM4 — Windows *(future)* | 4 GB | 2 | 60 GB |
+
+## Downloads Checklist
+
+- [ ] **Ubuntu 24.04 LTS ISO** — for VM1
+- [ ] **REMnux OVA** — pre-built VM with all analysis tools
+- [ ] **VMware Workstation / Fusion**
+- [ ] **Anthropic account** with Claude Pro, Max, Team, or Enterprise — required for Claude Code authentication
+- [ ] **VirusTotal API key** — Premium recommended for file downloads

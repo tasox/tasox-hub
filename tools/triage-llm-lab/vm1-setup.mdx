@@ -1,0 +1,107 @@
+---
+title: "VM1 — Ubuntu LLM Host"
+description: "Install and configure the Claude Code orchestration host."
+icon: "monitor"
+---
+
+Install Ubuntu 24.04, then install Claude Code and all MCP server dependencies. Keep VM1 on NAT throughout this section.
+
+## Step 1 — System Update
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git build-essential python3 python3-pip zip unzip
+```
+
+## Step 2 — Install Claude Code
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Verify
+claude --version
+claude doctor
+```
+
+## Step 3 — Authenticate Claude Code
+
+```bash
+claude
+# 1. Select "Sign in with Claude.ai"
+# 2. Open the displayed URL in your browser
+# 3. Enter the device code
+# 4. Sign in with your account
+```
+
+## Step 4 — Install Node.js 20 LTS
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+node --version   # v20.x.x
+npm --version    # 10.x.x
+```
+
+## Step 5 — Store API Keys Securely
+
+```bash
+mkdir -p ~/.config/malware-lab
+cat > ~/.config/malware-lab/secrets.env << 'EOF'
+VIRUSTOTAL_API_KEY=paste_your_vt_key_here
+EOF
+
+chmod 600 ~/.config/malware-lab/secrets.env
+echo 'source ~/.config/malware-lab/secrets.env' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## Step 6 — Create Working Directory & CLAUDE.md
+
+```bash
+mkdir -p ~/malware-analysis ~/downloads
+
+cat > ~/malware-analysis/CLAUDE.md << 'EOF'
+# Malware Analysis Lab
+
+## Startup
+At the start of every session, list all available tools from remnux-ssh MCP grouped
+by their category, then list all available virustotal MCP tools with a short description.
+After showing the full list, wait for the next instruction.
+
+## REMnux VM
+- Host: 192.168.56.20
+- User: remnux
+- SSH key: /home/tasox/.ssh/remnux_key
+
+## Directories
+- Intake (zip files):  /home/remnux/intake/
+- Samples (unzipped): /home/remnux/samples/
+- Ghidra maps /home/remnux/samples/ → /data/
+
+## Rules
+- Never store or execute samples on VM1 (this machine)
+- Samples only live in /home/remnux/samples/ on REMnux
+- Always revert REMnux snapshot after each analysis session
+EOF
+```
+
+## Step 7 — Create the `lab` Shortcut
+
+```bash
+cat >> ~/.bashrc << 'EOF'
+
+lab() {
+  cd ~/malware-analysis
+  echo "Loading malware analysis lab..."
+  claude "Show all available tools for this malware analysis lab grouped by category:
+1. List all tools from remnux-ssh MCP grouped by their [CATEGORY] tag
+2. List all tools from virustotal MCP with a short description of each
+After showing the full list, wait for my next instruction."
+}
+EOF
+
+source ~/.bashrc
+```
+
+Type `lab` from anywhere to start an analysis session. Claude will automatically list all available tools grouped by category before waiting for your first prompt.

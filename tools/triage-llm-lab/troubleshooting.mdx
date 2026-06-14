@@ -1,0 +1,29 @@
+---
+title: "Troubleshooting"
+description: "Common issues and fixes when setting up or running the lab."
+icon: "circle-help"
+---
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| SSH connection refused | SSH service not running or wrong IP | Run `sudo systemctl start ssh` on REMnux. Verify IP with `ip a`. |
+| MCP shows "Failed to connect" | Node.js path wrong or build not compiled | Run `npx tsc` in `~/mcp/remnux-mcp`. Re-register with `claude mcp remove` then `add`. |
+| Ghidra returns "Unauthorized" | Auth token not passed through SSH layers | Use the `ghidra-scripts` wrapper approach — do not pass token directly via `docker exec`. |
+| Ghidra container crashes on start | Binding to `0.0.0.0` without auth token | Always set `GHIDRA_MCP_AUTH_TOKEN` when using `GHIDRA_MCP_BIND_ADDRESS=0.0.0.0`. |
+| MCP not visible in Claude session | Registered with project scope, not user scope | Re-register with `--scope user`. Check `~/.claude.json` for duplicate entries. |
+| SSH tunnel lost after reboot | Tunnel not persistent | Add to `~/.bashrc`: `ssh -i ~/.ssh/remnux_key -N -L 8089:127.0.0.1:8089 remnux@192.168.56.20 &` |
+| npm install hangs on REMnux | Registry blocked (REMnux has no internet) | Install on VM1, then `scp node_modules` to REMnux. Or temporarily enable NAT. |
+
+## Security Notes
+
+<Warning>
+  Follow these rules to keep the lab isolated and your host machine safe.
+</Warning>
+
+- **Never execute samples on VM1.** Samples only ever live on REMnux (`/home/remnux/samples/`).
+- **Keep REMnux host-only.** Switch back to host-only immediately after installing tools.
+- **Use password-protected zips.** Always transfer as `zip -P infected sample.zip sample.exe`.
+- **Revert snapshots between samples.** Take a clean snapshot before analysis; revert after each session.
+- **Disable shared clipboard and drag-and-drop** in VMware settings for REMnux.
+- **API keys stay on VM1 only.** The VirusTotal key is never transferred to REMnux.
+- **The Ghidra auth token is lab-internal only.** Bound to `127.0.0.1` inside Docker — not exposed on the network.

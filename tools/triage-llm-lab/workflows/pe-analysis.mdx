@@ -1,0 +1,20 @@
+---
+title: "Full PE Sample Analysis"
+description: "End-to-end workflow for analyzing a Windows PE binary."
+icon: "file-code"
+---
+
+Use this prompt in a `lab` session to run a full PE analysis:
+
+```
+Full malware analysis workflow:
+
+1. Use virustotal MCP to download SHA256 <HASH> to ~/downloads/sample.zip
+2. Transfer sample.zip to REMnux: scp to /home/remnux/intake/sample.zip
+3. Use remnux-ssh intake_sample to unzip with password infected
+4. Use remnux-ssh triage_full on the extracted sample
+5. Use virustotal get_file_report for the hash
+6. Use remnux-ssh ghidra_load_sample then ghidra_list_imports and ghidra_detect_malware
+7. Write a triage report summarizing: file type, hashes, capabilities,
+   IOCs, VT detections, and recommended next steps
+```

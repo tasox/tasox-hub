@@ -1,0 +1,61 @@
+---
+title: "VM2 — REMnux Analysis Machine"
+description: "Import REMnux and install additional analysis tools."
+icon: "cpu"
+---
+
+Import the REMnux OVA into VMware, then install additional tools while NAT is still active. Switch to host-only **only** after all tools are installed.
+
+## Step 1 — Import REMnux OVA
+
+In VMware: **File → Open** → select the REMnux `.ova` file → Import. Allocate 4 GB RAM and 2 vCPUs.
+
+## Step 2 — Install SSH Server
+
+```bash
+sudo apt update
+sudo apt install -y openssh-server
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+# Verify SSH is listening
+sudo ss -tlnp | grep 22
+```
+
+## Step 3 — Install Additional Analysis Tools
+
+```bash
+# Python analysis tools
+pip3 install vipermonkey uncompyle6 dnfile pefile --break-system-packages
+
+# JavaScript deobfuscation
+npm install -g synchrony js-beautify
+
+# Verify key tools
+which olevba oleid mraptor diec floss capa
+which readelf objdump nm binwalk exiftool js-beautify synchrony
+
+# Verify Python libraries
+python3 -c "import dnfile, pefile; print('dnfile', dnfile.__version__, 'pefile ok')"
+```
+
+## Step 4 — Install Docker (for Ghidra MCP)
+
+```bash
+# Docker is typically pre-installed on REMnux — verify:
+docker --version
+
+# If not installed:
+sudo apt install -y docker.io
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+## Step 5 — Create Sample Directories
+
+```bash
+mkdir -p /home/remnux/samples
+mkdir -p /home/remnux/intake
+mkdir -p /home/remnux/ghidra-scripts
+```
