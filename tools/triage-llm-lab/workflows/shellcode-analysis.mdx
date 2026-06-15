@@ -1,0 +1,31 @@
+---
+title: "Shellcode / Raw Binary Analysis"
+description: "Load and decompile headerless shellcode or raw binaries with Ghidra via remnux-ssh."
+icon: "binary"
+---
+
+```
+Analyze the raw shellcode at /home/remnux/samples/shellcode.bin:
+
+1. Use remnux-ssh triage_quick for file type and hashes
+2. Use remnux-ssh ghidra_load_sample with:
+   - path: /home/remnux/samples/shellcode.bin
+   - language: x86:LE:64:default  (or x86:LE:32:default for 32-bit)
+3. Use remnux-ssh ghidra_run_analysis with entry_offset=0x0
+4. Use remnux-ssh ghidra_list_functions to see discovered functions
+5. Use remnux-ssh ghidra_decompile on each function found
+6. Summarize: shellcode purpose, API calls, IOCs, likely malware family
+```
+
+## Supported Language IDs
+
+| Architecture | Language ID |
+|--------------|-------------|
+| x86 64-bit | `x86:LE:64:default` |
+| x86 32-bit | `x86:LE:32:default` |
+| ARM 32-bit | `ARM:LE:32:v8` |
+| ARM 64-bit | `AARCH64:LE:64:v8A` |
+
+<Warning>
+  Always call `ghidra_run_analysis` after loading raw/headerless binaries — Ghidra does not auto-analyze them. Without this step, `ghidra_list_functions` will return empty.
+</Warning>

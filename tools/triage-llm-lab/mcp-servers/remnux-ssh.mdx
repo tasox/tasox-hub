@@ -41,7 +41,7 @@ ls build/   # verify output
 
 ## Create Ghidra Helper Scripts on REMnux
 
-These scripts solve SSH quoting issues when calling the Ghidra Docker container.
+These scripts solve SSH quoting issues when communicating with the Ghidra Docker container. The POST script automatically translates REMnux paths to container paths and supports an optional language parameter for shellcode/raw binaries.
 
 ```bash
 ssh remnux 'python3 -c "
@@ -55,8 +55,17 @@ docker exec ghidra-mcp sh /tmp/gh_cmd.sh
 \"\"\"
 
 post_script = \"\"\"#!/bin/sh
-echo \x27{\"file\":\"\x27\$1\x27\"}\x27 > /tmp/gh_body.json
+FILE_PATH=\$(echo \"\$1\" | sed \x27s|/home/remnux/samples/|/data/|\x27)
+LANGUAGE=\$2
+if [ -n \"\$LANGUAGE\" ]; then
+  BODY=\"{\\\"file\\\":\\\"\$FILE_PATH\\\",\\\"language\\\":\\\"\$LANGUAGE\\\"}\"
+else
+  BODY=\"{\\\"file\\\":\\\"\$FILE_PATH\\\"}\"
+fi
+echo \"\$BODY\" > /tmp/gh_body.json
+echo \"curl -s -X POST -H \x27Authorization: Bearer ghidra-lab-token\x27 -H \x27Content-Type: application/json\x27 -d @/tmp/gh_body.json http://localhost:8089/load_program\" > /tmp/gh_post_cmd.sh
 docker cp /tmp/gh_body.json ghidra-mcp:/tmp/gh_body.json
+docker cp /tmp/gh_post_cmd.sh ghidra-mcp:/tmp/gh_post_cmd.sh
 docker exec ghidra-mcp sh /tmp/gh_post_cmd.sh
 \"\"\"
 
@@ -67,6 +76,8 @@ os.chmod(\"/home/remnux/ghidra-scripts/ghidra-post.sh\", 0o755)
 print(\"Scripts written\")
 "'
 ```
+
+The POST script maps `/home/remnux/samples/` → `/data/` automatically. For raw shellcode, pass the language as a second argument — e.g. `x86:LE:64:default`.
 
 ## Register with Claude Code
 
@@ -84,15 +95,21 @@ claude mcp list | grep remnux-ssh
 
 ## MCP Tool Groups
 
-| Group | Tag | Tools |
-|-------|-----|-------|
+| Group | Tag | Key Tools |
+|-------|-----|-----------|
 | Intake & Utility | `[UTILITY]` | `run_command`, `upload_sample`, `intake_sample`, `list_samples` |
-| Quick Triage | `[TRIAGE]` | `triage_quick`, `triage_pe`, `triage_iocs`, `triage_office`, `triage_script`, `triage_elf`, `triage_python`, `triage_full` |
+| Quick Triage | `[TRIAGE]` | `triage_quick`, `triage_pe`, `triage_iocs`, `triage_office`, `triage_script`, `triage_elf`, `triage_python`, `triage_java`, `triage_go`, `triage_dotnet`, `triage_full` |
 | Deep Static | `[STATIC]` | `analyze_file`, `floss_strings`, `capa_analyze`, `diec_analyze`, `binwalk_extract`, `extract_config` |
 | Office Documents | `[OFFICE]` | `oleid_analyze`, `olevba_analyze`, `oledump_analyze`, `mraptor_analyze`, `vmonkey_analyze` |
 | Script Deobfuscation | `[DEOBFUSCATE]` | `deobfuscate_js`, `js_beautify`, `js_extract_strings`, `deobfuscate_powershell` |
 | MSI / MSIX | `[MSI]` | `msi_analyze`, `msi_extract_files`, `msix_analyze` |
-| ELF Analysis | `[ELF]` | `elf_analyze`, `elf_imports`, `elf_sections`, `elf_iocs` |
+| ELF / Linux | `[ELF]` | `elf_analyze`, `elf_imports`, `elf_sections`, `elf_iocs` |
 | Python Malware | `[PYTHON]` | `pyinstaller_extract`, `python_decompile`, `python_analyze` |
-| Ghidra | `[GHIDRA]` | `ghidra_version`, `ghidra_load_sample`, `ghidra_list_functions`, `ghidra_decompile`, `ghidra_list_imports`, `ghidra_list_strings`, `ghidra_detect_malware`, `ghidra_extract_iocs` |
-| .NET Assembly | `[DOTNET]` | `dotnet_decompile`, `dotnet_il_disasm`, `dotnet_pe_headers`, `dotnet_metadata`, `dotnet_strings`, `dotnet_resources`, `triage_dotnet` |
+| .NET Assembly | `[DOTNET]` | `dotnet_decompile`, `dotnet_il_disasm`, `dotnet_pe_headers`, `dotnet_metadata`, `dotnet_strings`, `dotnet_resources` |
+| Java / JAR | `[JAVA]` | `java_decompile`, `java_disassemble`, `java_jar_inspect`, `java_extract_jar`, `jadx_decompile`, `java_strings_iocs` |
+| Go Binaries | `[GO]` | `go_info`, `go_symbols`, `go_strings`, `go_capabilities`, `go_modules` |
+| Ghidra | `[GHIDRA]` | `ghidra_load_sample`, `ghidra_run_analysis`, `ghidra_list_functions`, `ghidra_decompile`, `ghidra_list_imports`, `ghidra_list_strings`, `ghidra_detect_malware`, `ghidra_extract_iocs` |
+
+<Note>
+  For shellcode/raw binaries call `ghidra_run_analysis` with `entry_offset=0x0` after loading. Supported language IDs: `x86:LE:64:default`, `x86:LE:32:default`, `ARM:LE:32:v8`, `AARCH64:LE:64:v8A`.
+</Note>

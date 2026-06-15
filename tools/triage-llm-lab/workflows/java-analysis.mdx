@@ -1,0 +1,21 @@
+---
+title: "Java / JAR Analysis"
+description: "Decompile and analyze JAR files and Android APKs via remnux-ssh."
+icon: "coffee"
+---
+
+```
+Analyze the JAR at /home/remnux/samples/payload.jar:
+
+1. Use remnux-ssh triage_java
+2. Use remnux-ssh java_jar_inspect for class and resource listing
+3. Use remnux-ssh java_decompile with tool=both (CFR + Procyon)
+4. If obfuscated, use remnux-ssh jadx_decompile
+5. Use remnux-ssh java_strings_iocs for C2 indicators
+6. Use virustotal get_file_report
+7. Summarize: functionality, obfuscation, IOCs, malware family
+```
+
+<Tip>
+  If `cfr` and `procyon` return empty output, verify with `file sample.jar`. Use `jadx_decompile` as fallback for encrypted or heavily obfuscated JARs. Note: `jadx` is at `/usr/local/jadx/bin/jadx` on REMnux.
+</Tip>

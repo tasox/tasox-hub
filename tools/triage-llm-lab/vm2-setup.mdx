@@ -26,18 +26,27 @@ sudo ss -tlnp | grep 22
 
 ```bash
 # Python analysis tools
-pip3 install vipermonkey uncompyle6 dnfile pefile --break-system-packages
+pip3 install vipermonkey uncompyle6 dnfile pefile blint --break-system-packages
 
 # JavaScript deobfuscation
 npm install -g synchrony js-beautify
 
+# Go runtime (for Go binary analysis)
+sudo apt install -y golang-go
+
 # Verify key tools
 which olevba oleid mraptor diec floss capa
-which readelf objdump nm binwalk exiftool js-beautify synchrony
+which readelf objdump nm binwalk exiftool
+which js-beautify synchrony cfr procyon javap
+/usr/local/jadx/bin/jadx --version
+go version
+blint --version 2>/dev/null || echo "blint installed as Python package"
 
 # Verify Python libraries
 python3 -c "import dnfile, pefile; print('dnfile', dnfile.__version__, 'pefile ok')"
 ```
+
+> Most tools are pre-installed on REMnux. The commands above install the few that require manual setup. Run them all — existing installs will simply be skipped.
 
 ## Step 4 — Install Docker (for Ghidra MCP)
 

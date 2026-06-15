@@ -1,73 +1,97 @@
 ---
-title: "Analysis Tools"
-description: "Complete reference of all analysis tools available on REMnux."
+title: "REMnux Analysis Tools"
+description: "Complete reference of all analysis tools available on REMnux, organized by category."
 icon: "wrench"
 ---
 
 ## Static Analysis
 
-| Tool | Description |
-|------|-------------|
-| `file` | Identify file type by magic bytes |
-| `strings` | Extract printable strings |
-| `xxd` | Hex dump files |
-| `diec` / `die` | Detect packers, compilers, protectors |
-| `FLOSS` | Extract obfuscated + stack strings |
-| `CAPA` | MITRE ATT&CK capability detection |
-| `pescanner` | PE header analysis |
-| `exiftool` | File metadata extraction |
-| `binwalk` | Embedded file extraction |
-| `upx` | UPX packer detection / unpacking |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `file` | Identify file type by magic bytes | built-in |
+| `strings` | Extract printable strings | built-in |
+| `xxd` | Hex dump files | built-in |
+| `diec` / `die` | Detect packers, compilers, protectors | pre-installed |
+| `FLOSS` | Extract obfuscated + stack strings | pre-installed |
+| `CAPA` | MITRE ATT&CK capability detection | pre-installed |
+| `pescanner` | PE header and section analysis | pre-installed |
+| `exiftool` | File metadata extraction | pre-installed |
+| `binwalk` | Embedded file extraction | pre-installed |
+| `upx` | UPX packer detection / unpacking | pre-installed |
 
 ## Office Document Analysis
 
-| Tool | Description |
-|------|-------------|
-| `olevba` | VBA macro extraction and analysis |
-| `oleid` | OLE file indicator detection |
-| `oledump` | OLE stream dumping |
-| `mraptor` | Malicious macro detection |
-| `ViperMonkey` | VBA macro emulation |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `olevba` | VBA macro extraction and analysis | pre-installed |
+| `oleid` | OLE file indicator detection | pre-installed |
+| `oledump` | OLE stream dumping | pre-installed |
+| `mraptor` | Malicious macro detection | pre-installed |
+| `ViperMonkey` | VBA macro emulation | install |
 
 ## Script Deobfuscation
 
-| Tool | Description |
-|------|-------------|
-| `synchrony` | JavaScript deobfuscation (obfuscator.io) |
-| `js-beautify` | JavaScript formatting |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `synchrony` | JavaScript deobfuscation (obfuscator.io) | install |
+| `js-beautify` | JavaScript formatting and beautification | install |
 
 ## ELF / Linux Analysis
 
-| Tool | Description |
-|------|-------------|
-| `readelf` | ELF header and section analysis |
-| `objdump` | Disassembly and symbol inspection |
-| `nm` | Symbol table listing |
-| `ldd` | Shared library dependencies |
-| `strace` / `ltrace` | System and library call tracing |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `readelf` | ELF header and section analysis | built-in |
+| `objdump` | Disassembly and symbol inspection | built-in |
+| `nm` | Symbol table listing | built-in |
+| `ldd` | Shared library dependencies | built-in |
+| `strace` / `ltrace` | System and library call tracing | pre-installed |
 
 ## Python Malware
 
-| Tool | Description |
-|------|-------------|
-| `pyinstxtractor-ng` | Unpack PyInstaller bundles |
-| `uncompyle6` | Decompile Python `.pyc` bytecode |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `pyinstxtractor-ng` | Unpack PyInstaller bundles | pre-installed |
+| `uncompyle6` | Decompile Python `.pyc` bytecode | install |
 
-## Windows Installer
+## Windows Installer (MSI / MSIX)
 
-| Tool | Description |
-|------|-------------|
-| `msiextract` | Extract MSI file contents |
-| `msidump` | Dump MSI database tables |
-| `7z` / `unzip` | Extract MSIX/AppX packages |
-| `cabextract` | Extract Cabinet files |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `msiextract` | Extract MSI file contents | pre-installed |
+| `msidump` | Dump MSI database tables | pre-installed |
+| `7z` / `unzip` | Extract MSIX/AppX packages | pre-installed |
+| `cabextract` | Extract Cabinet files | pre-installed |
 
 ## .NET Assembly Analysis
 
-| Tool | Description |
-|------|-------------|
-| `ilspycmd` | Decompile .NET assemblies to C# source |
-| `monodis` | Disassemble .NET IL bytecode, extract user strings |
-| `pedump` | PE/CLI header and metadata table analysis |
-| `dnfile` | Python library for .NET metadata parsing |
-| `pefile` | Python PE structure parsing library |
+| Tool | Description | Source |
+|------|-------------|--------|
+| `ilspycmd` | Decompile .NET assemblies to C# source | pre-installed |
+| `monodis` | Disassemble .NET IL bytecode, extract user strings | pre-installed |
+| `pedump` | PE/CLI header and metadata table analysis | pre-installed |
+| `dnfile` | Python library for .NET metadata parsing | install |
+| `pefile` | Python PE structure parsing library | install |
+| `dotnet 8.0 runtime` | Required by ilspycmd | pre-installed |
+
+## Java / JAR Analysis
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `cfr` | Decompile JAR/class to Java source — handles modern Java well | pre-installed |
+| `procyon` | Alternative Java decompiler — better with obfuscated code | pre-installed |
+| `javap` | Disassemble `.class` bytecode to JVM instructions | built-in |
+| `jadx` | Decompile JAR and Android APK — best for obfuscated JARs | pre-installed |
+| `java` / `jar` | JDK tools for manifest inspection and class listing | built-in |
+
+<Note>
+  `jadx` is at `/usr/local/jadx/bin/jadx` on REMnux — it is not in `PATH` by default.
+</Note>
+
+## Go Binary Analysis
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `go version -m` | Extract build info and module dependencies from Go binary | install |
+| `blint` | Go binary capability detection — MITRE ATT&CK mapping | install |
+| `nm` / `objdump` | Symbol extraction — Go symbols are rarely stripped | built-in |
+| `strings` | Go binaries embed module paths unobfuscated — very effective | built-in |

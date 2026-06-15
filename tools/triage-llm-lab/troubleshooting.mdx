@@ -10,12 +10,17 @@ icon: "circle-help"
 | MCP shows "Failed to connect" | Node.js path wrong or build not compiled | Run `npx tsc` in `~/mcp/remnux-mcp`. Re-register with `claude mcp remove` then `add`. |
 | Ghidra returns "Unauthorized" | Auth token not passed through SSH layers | Use the `ghidra-scripts` wrapper approach — do not pass token directly via `docker exec`. |
 | Ghidra container crashes on start | Binding to `0.0.0.0` without auth token | Always set `GHIDRA_MCP_AUTH_TOKEN` when using `GHIDRA_MCP_BIND_ADDRESS=0.0.0.0`. |
+| `ghidra_list_functions` returns empty | Sample loaded but not analyzed | Call `ghidra_run_analysis` with `entry_offset=0x0` after loading. Required for raw shellcode and headerless binaries. |
+| `ghidra_load_sample` fails on shellcode | Auto-detection fails on headerless binaries | Pass the `language` parameter: `x86:LE:64:default` for 64-bit, `x86:LE:32:default` for 32-bit. |
+| `ghidra_load_sample` returns "File not found" | Container uses `/data/` not `/home/remnux/samples/` | The updated `ghidra-post.sh` translates paths automatically. If using `run_command` directly, use `/data/filename`. |
 | MCP not visible in Claude session | Registered with project scope, not user scope | Re-register with `--scope user`. Check `~/.claude.json` for duplicate entries. |
-| SSH tunnel lost after reboot | Tunnel not persistent | Add to `~/.bashrc`: `ssh -i ~/.ssh/remnux_key -N -L 8089:127.0.0.1:8089 remnux@192.168.56.20 &` |
-| npm install hangs on REMnux | Registry blocked (no internet) | Install on VM1, then `scp node_modules` to REMnux. Or temporarily enable NAT. |
-| sift-ssh MCP not connecting | Wrong username or key path | SIFT default user is `sansforensics` not `ubuntu`. Verify: `ssh -i ~/.ssh/sift_key sansforensics@192.168.56.30` |
-| Volatility3 returns no output | Wrong OS profile or memory image path | Try `vol -f image.dmp windows.info` first to detect OS. Use full absolute path to memory image. |
-| netplan apply fails on SIFT | Syntax error or nano not installed | Use `sudo tee /etc/netplan/...` instead of nano. Check interface name with `ip a` first. |
+| npm install hangs on REMnux/SIFT | No internet (host-only network) | Re-enable NAT temporarily to install. Switch back to host-only after. |
+| sift-ssh MCP not connecting | Wrong username or key path | SIFT default user is `sansforensics`. Verify: `ssh -i ~/.ssh/sift_key sansforensics@192.168.56.30` |
+| Volatility3 returns no output | Wrong OS profile or memory image path | Try `vol -f image.dmp windows.info` first to detect OS. Use full absolute path. |
+| netplan apply fails on SIFT | nano not installed | Use `sudo tee /etc/netplan/...` instead. Check interface name with `ip a` first. |
+| cfr/procyon empty output | Not a valid JAR or encrypted JAR | Verify with `file sample.jar`. Try `jadx` as fallback. |
+| `go version -m` returns nothing | Stripped binary or not Go | Use `strings binary \| grep 'go[0-9]'`. Go binaries embed module paths even when stripped. |
+| jadx not found | Not in PATH on REMnux | Use full path: `/usr/local/jadx/bin/jadx`. |
 
 ## Security Notes
 
@@ -23,10 +28,11 @@ icon: "circle-help"
   Follow these rules to keep the lab isolated and your host machine safe.
 </Warning>
 
-- **Never execute samples on VM1.** Samples only ever live on REMnux (`/home/remnux/samples/`).
-- **Keep REMnux host-only.** Switch back to host-only immediately after installing tools.
+- **Never execute samples on VM1.** Samples only ever live on REMnux (`/home/remnux/samples/`) or SIFT (`/cases/`).
+- **Keep REMnux and SIFT host-only.** Switch back immediately after installing tools. Never leave analysis VMs on NAT during a session.
 - **Use password-protected zips.** Always transfer as `zip -P infected sample.zip sample.exe`.
 - **Revert snapshots between samples.** Take a clean snapshot before analysis; revert after each session.
-- **Disable shared clipboard and drag-and-drop** in VMware settings for REMnux.
-- **API keys stay on VM1 only.** The VirusTotal key is never transferred to REMnux.
+- **Disable shared clipboard and drag-and-drop** in VMware settings for REMnux and SIFT.
+- **API keys stay on VM1 only.** The VirusTotal key is never transferred to analysis VMs.
+- **Hash all evidence.** Use `sift-ssh hash_file` before and after analysis to maintain chain of custody.
 - **The Ghidra auth token is lab-internal only.** Bound to `127.0.0.1` inside Docker — not exposed on the network.

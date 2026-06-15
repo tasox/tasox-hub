@@ -1,0 +1,42 @@
+---
+title: "SIFT Forensic Tools"
+description: "Complete reference of forensic tools available on the SIFT Workstation."
+icon: "shield-check"
+---
+
+## Memory Forensics
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `Volatility3 (vol)` | Windows/Linux/macOS memory analysis — pslist, netscan, malfind, cmdline, dlllist | pre-installed |
+
+## Disk Forensics
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `fls` / `icat` | List and extract files from disk images | pre-installed |
+| `fsstat` / `mmls` | Filesystem and partition info | pre-installed |
+| `tsk_recover` | Recover files from disk images | pre-installed |
+| `Autopsy` | GUI forensic browser for disk images | pre-installed |
+
+## Timeline Analysis
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `log2timeline.py` | Create super-timelines from disk images and artifacts | pre-installed |
+| `psteal.py` / `psort.py` | Filter, sort and export plaso timeline events | pre-installed |
+
+## Artifact Extraction
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `bulk_extractor` | Extract emails, URLs, credit cards, domains from images | pre-installed |
+| `foremost` | Carve deleted files from disk images | pre-installed |
+| `dcfldd` | Forensic disk copy with hash verification | install |
+| `ssdeep` | Fuzzy hashing for file similarity | install |
+
+## Registry Forensics
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `RegRipper (rip.pl)` | Extract autoruns, user activity, program execution from registry hives | pre-installed |

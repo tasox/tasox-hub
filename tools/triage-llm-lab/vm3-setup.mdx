@@ -10,47 +10,49 @@ Import the SIFT Workstation OVA into VMware, then install additional tools while
 
 ## Step 1 — Import SIFT OVA
 
-In VMware: **File → Open** → select the SIFT `.ova` file → Import. Allocate 4 GB RAM, 2 vCPUs, and 80 GB disk.
+In VMware: **File → Open** → select the SIFT `.ova` → Import. Allocate 4 GB RAM, 2 vCPUs, 80 GB disk.
 
-## Step 2 — Enable SSH & VMware Tools
+## Step 2 — Enable Copy/Paste from Host
+
+In VMware: **VM → Settings → Options → Guest Isolation** → enable *"Allow copy and paste"*. Then:
 
 ```bash
-# Enable copy/paste (VMware Tools)
 sudo apt install -y open-vm-tools open-vm-tools-desktop
+sudo systemctl restart open-vm-tools
+sudo reboot
+```
 
-# Enable SSH server
-sudo systemctl enable ssh --now
+## Step 3 — Install SSH Server
 
-# Verify SSH is listening
+```bash
+sudo apt update
+sudo apt install -y openssh-server
+sudo systemctl enable ssh && sudo systemctl start ssh
 sudo ss -tlnp | grep 22
 ```
 
-## Step 3 — Verify Core Forensic Tools
+## Step 4 — Install Additional Forensic Tools
 
 ```bash
-vol -h 2>/dev/null | head -3       # Volatility3
-fls --version                       # Sleuthkit
-log2timeline.py --version           # Plaso
-bulk_extractor --version
-foremost -V
-rip.pl --help 2>&1 | head -3
-dcfldd --version
-ssdeep -V
-```
+sudo apt update
+sudo apt install -y sleuthkit yara python3-yara \
+  dcfldd hashdeep ssdeep exiftool \
+  libewf2t64 afflib-tools git python3-pip
 
-## Step 4 — Install Additional Tools
+pip3 install python-registry construct dissect.cstruct \
+  --break-system-packages 2>&1 | tail -3
 
-```bash
-sudo apt install -y sleuthkit yara python3-yara dcfldd hashdeep ssdeep \
-  exiftool libewf2t64 afflib-tools python3-registry
-
-pip3 install construct dissect.cstruct --break-system-packages
+# Verify key tools
+vol -h 2>/dev/null | head -2       # Volatility3
+which fls icat fsstat mmls         # Sleuth Kit
+which log2timeline.py psteal.py    # Plaso
+which rip.pl bulk_extractor foremost dcfldd ssdeep yara
 ```
 
 ## Step 5 — Create Cases Directory
 
 ```bash
-sudo mkdir -p /cases/carved /cases/dumps /cases/recovered
+sudo mkdir -p /cases /cases/carved /cases/dumps /cases/recovered
 sudo chown -R sansforensics:sansforensics /cases
 ```
 
@@ -58,21 +60,25 @@ Place memory dumps at `/cases/memory.dmp`, disk images at `/cases/disk.dd`, etc.
 
 ## Step 6 — Set Static IP
 
-Check the host-only interface name with `ip a`, then edit the netplan config:
+```bash
+# Check interface name first
+ip a | grep -E "^[0-9]+:" | grep -v lo
 
-```yaml
+# Write netplan config (use tee — nano not installed on SIFT)
+sudo tee /etc/netplan/01-network-manager-all.yaml << 'EOF'
 network:
   version: 2
   ethernets:
     ens33:
       dhcp4: no
       addresses: [192.168.56.30/24]
+EOF
+
+sudo netplan apply
+ip a | grep 192.168.56.30  # verify
 ```
 
-```bash
-sudo netplan apply
-ping -c 3 192.168.56.10   # verify VM1 is reachable
-```
+> After applying the static IP, switch the VMware network adapter to **Host-only (VMnet1)**.
 
 ## Step 7 — SSH Key from VM1
 
@@ -84,7 +90,3 @@ ssh-copy-id -i ~/.ssh/sift_key.pub sansforensics@192.168.56.30
 # Test
 ssh -i ~/.ssh/sift_key sansforensics@192.168.56.30 "uname -a && echo SSH OK"
 ```
-
-## Step 8 — Switch to Host-Only
-
-In VMware settings: set the SIFT network adapter to **Host-only only**. SIFT should no longer have internet access after this step.

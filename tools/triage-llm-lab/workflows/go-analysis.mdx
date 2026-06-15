@@ -1,0 +1,22 @@
+---
+title: "Go Binary Analysis"
+description: "Analyze compiled Go binaries to extract modules, capabilities, and IOCs via remnux-ssh."
+icon: "activity"
+---
+
+```
+Analyze the Go binary at /home/remnux/samples/implant:
+
+1. Use remnux-ssh triage_go
+2. Use remnux-ssh go_info for build version and metadata
+3. Use remnux-ssh go_modules for third-party libraries
+4. Use remnux-ssh go_symbols for exported functions
+5. Use remnux-ssh go_capabilities for MITRE ATT&CK mapping
+6. Use remnux-ssh go_strings for network IOCs
+7. Cross-reference IOCs with virustotal
+8. Summarize: C2 framework, capabilities, persistence, IOCs
+```
+
+<Tip>
+  Go binaries embed module paths as strings even when stripped. If `go version -m` returns nothing, use `strings binary | grep 'go[0-9]'` to confirm it's a Go binary and recover module information.
+</Tip>

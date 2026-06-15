@@ -69,6 +69,7 @@
             "group": "Reference",
             "pages": [
               "tools/triage-llm-lab/analysis-tools",
+              "tools/triage-llm-lab/sift-tools",
               "tools/triage-llm-lab/troubleshooting"
             ]
           },
@@ -76,10 +77,13 @@
             "group": "Analysis Workflows",
             "pages": [
               "tools/triage-llm-lab/workflows/pe-analysis",
+              "tools/triage-llm-lab/workflows/shellcode-analysis",
               "tools/triage-llm-lab/workflows/office-docs",
               "tools/triage-llm-lab/workflows/js-deobfuscation",
               "tools/triage-llm-lab/workflows/dotnet-analysis",
               "tools/triage-llm-lab/workflows/pyinstaller",
+              "tools/triage-llm-lab/workflows/java-analysis",
+              "tools/triage-llm-lab/workflows/go-analysis",
               "tools/triage-llm-lab/workflows/memory-forensics",
               "tools/triage-llm-lab/workflows/disk-forensics"
             ]
