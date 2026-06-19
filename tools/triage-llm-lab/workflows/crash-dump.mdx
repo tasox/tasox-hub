@@ -1,0 +1,21 @@
+---
+title: "Crash Dump Analysis with WinDbg"
+description: "Analyze Windows crash dumps (.dmp) using the WinDbg MCP on VM4."
+icon: "file-search"
+---
+
+```
+Analyze the crash dump at C:\dumps\crash.dmp using WinDbg MCP:
+
+1. Use windbg MCP to open and analyze C:\dumps\crash.dmp
+2. Get the exception record and faulting address
+3. Get the call stack at time of crash
+4. List loaded modules and check for suspicious ones
+5. Check if any known malicious modules are present
+6. Cross-reference any suspicious hashes with virustotal get_file_report
+7. Summarize: crash cause, faulting module, indicators of compromise
+```
+
+<Tip>
+  Crash dumps can come from malware that crashes the host process (e.g., shellcode injection failures) or from intentional `MiniDumpWriteDump` calls by the malware itself. Either way, the dump often contains decrypted strings and config in memory that static analysis misses.
+</Tip>

@@ -1,0 +1,31 @@
+---
+title: "Dynamic Analysis with x64dbg + FakeNet"
+description: "Run malware under x64dbg with FakeNet network simulation on Windows VM4."
+icon: "play"
+---
+
+<Warning>
+  Start FakeNet-NG on VM4 **before** transferring or running the sample. Never detonate without FakeNet active.
+</Warning>
+
+**Pre-flight (do manually on VM4):**
+1. Launch FakeNet: `cd C:\Users\tasox\Downloads\fakenet3.5\fakenet3.5 && fakenet.exe`
+2. Transfer sample from VM1: `scp -i ~/.ssh/windows_key <sample> analyst@192.168.56.40:C:/samples/`
+
+```
+Dynamic analysis of C:\samples\malware.exe:
+
+1. x64dbg debug_init with C:\samples\malware.exe
+2. breakpoint_set on suspicious APIs: CreateProcess, VirtualAlloc, WSAConnect, RegSetValue
+3. debug_run to execute the sample
+4. On each breakpoint hit: register_get_batch to capture CPU state
+5. memory_read at addresses pointed to by registers
+6. module_list to see what DLLs were loaded
+7. stack_get_trace to see call chain
+8. If packed: dump_detect_oep to find OEP then dump_module
+9. Summarize: execution flow, APIs called, network IOCs from FakeNet, verdict
+```
+
+<Tip>
+  After execution, review FakeNet's console log for DNS queries, HTTP requests, and any C2 beaconing patterns. This often reveals the malware family faster than static analysis.
+</Tip>

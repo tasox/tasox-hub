@@ -1,0 +1,115 @@
+---
+title: "VM4 — Windows 11 Setup"
+description: "Configure Windows 11 for dynamic malware analysis with x64dbg, WinDbg, and FakeNet-NG."
+icon: "windows"
+---
+
+<Warning>
+  Keep Windows 11 on **NAT** during this entire setup section. Switch to host-only only after all tools are installed and verified.
+</Warning>
+
+## Step 1 — Install OpenSSH Server
+
+Run in PowerShell (Admin):
+
+```powershell
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+Start-Service sshd
+Set-Service -Name sshd -StartupType Automatic
+New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server' `
+  -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+New-LocalUser -Name "analyst" -Password (ConvertTo-SecureString "LabPassword123!" -AsPlainText -Force)
+Add-LocalGroupMember -Group "Administrators" -Member "analyst"
+```
+
+## Step 2 — Set Static IP
+
+```powershell
+Get-NetAdapter  # find adapter name
+New-NetIPAddress -InterfaceAlias "Ethernet0" -IPAddress 192.168.56.40 -PrefixLength 24
+```
+
+Then in VMware: **VM → Settings → Network Adapter → Host-only (VMnet1)**
+
+## Step 3 — Configure SSH Key Authentication
+
+```powershell
+# Run in PowerShell (Admin)
+New-Item -ItemType Directory -Path "C:\Users\analyst\.ssh" -Force
+icacls "C:\Users\analyst\.ssh" /inheritance:r
+icacls "C:\Users\analyst\.ssh" /grant "analyst:(OI)(CI)F"
+
+# Paste public key from VM1 (cat ~/.ssh/windows_key.pub)
+$pubkey = "paste_content_of_windows_key.pub_here"
+Set-Content -Path "C:\Users\analyst\.ssh\authorized_keys" -Value $pubkey
+icacls "C:\Users\analyst\.ssh\authorized_keys" /inheritance:r
+icacls "C:\Users\analyst\.ssh\authorized_keys" /grant "analyst:F"
+icacls "C:\Users\analyst\.ssh\authorized_keys" /grant "SYSTEM:F"
+
+# Disable administrator_authorized_keys override in sshd_config
+$c = "C:\ProgramData\ssh\sshd_config"
+(Get-Content $c) -replace '^Match Group administrators','#Match Group administrators' | Set-Content $c
+Restart-Service sshd
+```
+
+## Step 4 — Install x64dbg + MCP Plugin
+
+1. Download x64dbg from [x64dbg.com](https://x64dbg.com) → extract to `C:\Users\tasox\Downloads\x64dbg\`
+2. Download MCP plugin from [github.com/SetsunaYukiOvO/x64dbg-mcp](https://github.com/SetsunaYukiOvO/x64dbg-mcp)
+3. Place `x64dbg_mcp.dp64` → `x64dbg\release\x64\plugins\`
+4. Place `x64dbg_mcp.dp32` → `x64dbg\release\x32\plugins\`
+
+The plugin starts an HTTP server on `127.0.0.1:3000` automatically when x64dbg loads.
+
+## Step 5 — Install mcp-windbg
+
+```powershell
+pip install mcp-windbg
+mcp-windbg --help
+```
+
+## Step 6 — Install FakeNet-NG
+
+- Download `fakenet.exe` from [flare-fakenet-ng releases v3.5](https://github.com/mandiant/flare-fakenet-ng/releases/tag/v3.5)
+- Extract to `C:\Users\tasox\Downloads\fakenet3.5\fakenet3.5\`
+
+<Warning>
+  **Do not autostart FakeNet.** Launch it manually before each analysis session, before detonating any sample.
+</Warning>
+
+## Step 7 — Create Autostart Script
+
+```powershell
+New-Item -ItemType Directory -Path "C:\lab" -Force
+
+@'
+Start-Process "C:\Users\tasox\Downloads\x64dbg\release\x64\x64dbg.exe" -WindowStyle Normal
+Start-Process "C:\Users\tasox\Downloads\x64dbg\release\x32\x32dbg.exe" -WindowStyle Normal
+Start-Sleep -Seconds 5
+Start-Process "C:\Users\tasox\AppData\Local\Programs\Python\Python313\Scripts\mcp-windbg.exe" `
+  -ArgumentList "--transport streamable-http --host 127.0.0.1 --port 8000"
+'@ | Out-File "C:\lab\startup.ps1" -Encoding UTF8
+
+$action = New-ScheduledTaskAction -Execute "powershell.exe" `
+  -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File C:\lab\startup.ps1"
+$trigger = New-ScheduledTaskTrigger -AtLogOn -User "tasox"
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+Register-ScheduledTask -TaskName "MalwareLab-Startup" `
+  -Action $action -Trigger $trigger -Settings $settings -RunLevel Highest -Force
+Start-ScheduledTask -TaskName "MalwareLab-Startup"
+```
+
+## Autostart Summary
+
+| Process | Port | Purpose | Autostart |
+|---------|------|---------|-----------|
+| `x64dbg.exe` (64-bit) | 3000 | User-mode debugging via MCP | ✅ Yes |
+| `x32dbg.exe` (32-bit) | 3000 | 32-bit debugging via MCP | ✅ Yes |
+| `mcp-windbg.exe` | 8000 | WinDbg/CDB via MCP | ✅ Yes |
+| `fakenet.exe` | — | Network traffic simulation | ⚠️ Manual |
+
+## Test SSH from VM1
+
+```bash
+ssh -i ~/.ssh/windows_key analyst@192.168.56.40 "whoami && hostname && echo Windows OK"
+```

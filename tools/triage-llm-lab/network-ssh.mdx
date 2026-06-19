@@ -13,6 +13,7 @@ In VMware: **VM → Settings → Network Adapter**. For VM1, add a second adapte
 | VM1 — Ubuntu | NAT (internet) | Host-only VMnet1 |
 | VM2 — REMnux | Host-only VMnet1 only | — |
 | VM3 — SIFT | Host-only VMnet1 only | — |
+| VM4 — Windows 11 | Host-only VMnet1 only | — |
 
 ## Static IP — VM1 (Ubuntu)
 
@@ -124,4 +125,30 @@ Host sift
 
 ```bash
 ssh sift "uname -a && vol -h 2>/dev/null | head -3"
+```
+
+### Windows 11 (VM4)
+
+Generate the key on VM1, then configure authorized_keys on VM4 manually (see [VM4 Setup](/tools/triage-llm-lab/vm4-setup)).
+
+```bash
+# On VM1 — generate key
+ssh-keygen -t ed25519 -f ~/.ssh/windows_key -N "" -C "vm1-to-windows"
+
+# Display the public key to paste into VM4
+cat ~/.ssh/windows_key.pub
+```
+
+`~/.ssh/config` entry:
+
+```
+Host windows
+    HostName 192.168.56.40
+    User analyst
+    IdentityFile ~/.ssh/windows_key
+    StrictHostKeyChecking no
+```
+
+```bash
+ssh windows "whoami && hostname && echo Windows OK"
 ```

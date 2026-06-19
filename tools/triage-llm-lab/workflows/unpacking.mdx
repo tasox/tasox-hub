@@ -1,0 +1,24 @@
+---
+title: "Unpacking with x64dbg"
+description: "Detect the Original Entry Point and dump an unpacked binary from memory using x64dbg MCP."
+icon: "package-open"
+---
+
+```
+Unpack the protected sample at C:\samples\packed.exe:
+
+1. x64dbg debug_init with C:\samples\packed.exe
+2. x64dbg debug_run — let the unpacker stub execute
+3. x64dbg dump_detect_oep to locate the Original Entry Point
+4. x64dbg dump_module to extract the unpacked binary to C:\dumps\
+5. Transfer dump back to VM1:
+   scp -i ~/.ssh/windows_key analyst@192.168.56.40:C:/dumps/unpacked.exe ~/downloads/
+6. Transfer to REMnux:
+   scp ~/downloads/unpacked.exe remnux@192.168.56.20:/home/remnux/samples/
+7. remnux-ssh triage_full on the unpacked binary
+8. remnux-ssh ghidra_load_sample for deep analysis
+```
+
+<Tip>
+  If `dump_detect_oep` returns multiple candidates, use `disassembly_at` on each to find the real entry (look for the standard MSVC/GCC startup stub). Set a breakpoint there and let the unpacker run to it before dumping.
+</Tip>

@@ -1,0 +1,51 @@
+---
+title: "WinDbg MCP"
+description: "Connect Claude Code to WinDbg/CDB on Windows VM4 via SSH tunnel for crash dump and kernel analysis."
+icon: "terminal"
+---
+
+`mcp-windbg` wraps the Windows CDB/WinDbg debugger over HTTP on port 8000. Use it for crash dump analysis, kernel debugging, and post-mortem investigation of Windows malware.
+
+## Prerequisites
+
+- `mcp-windbg` installed on VM4 via `pip install mcp-windbg`
+- The `C:\lab\startup.ps1` autostart task running (starts mcp-windbg on login)
+- SSH tunnel active from VM1 to VM4
+
+## Register with Claude Code
+
+The SSH tunnel for WinDbg shares the same connection as x64dbg (started by the `lab` function). Register the MCP after the tunnel is up:
+
+```bash
+claude mcp add windbg \
+  --scope user \
+  --transport http \
+  -- http://127.0.0.1:8000/mcp
+
+claude mcp list | grep windbg
+```
+
+## Test the Connection
+
+```bash
+curl -s http://127.0.0.1:8000/health
+```
+
+## Typical Usage
+
+Ask Claude to analyze a crash dump:
+
+```
+Use windbg MCP to open C:\dumps\crash.dmp and:
+1. Get the exception record and faulting address
+2. Get the call stack at time of crash
+3. List loaded modules and check for suspicious ones
+4. Summarize: crash cause, faulting module, any indicators of compromise
+```
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Port 8000 "connection refused" | Check that `startup.ps1` ran on VM4. Run manually: `mcp-windbg --transport streamable-http --host 127.0.0.1 --port 8000` |
+| Tunnel not forwarding | Re-establish: `ssh -i ~/.ssh/windows_key -N -L 8000:127.0.0.1:8000 analyst@192.168.56.40 &` |

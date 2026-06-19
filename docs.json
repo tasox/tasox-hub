@@ -53,6 +53,7 @@
               "tools/triage-llm-lab/vm1-setup",
               "tools/triage-llm-lab/vm2-setup",
               "tools/triage-llm-lab/vm3-setup",
+              "tools/triage-llm-lab/vm4-setup",
               "tools/triage-llm-lab/network-ssh"
             ]
           },
@@ -62,7 +63,9 @@
               "tools/triage-llm-lab/mcp-servers/remnux-ssh",
               "tools/triage-llm-lab/mcp-servers/sift-ssh",
               "tools/triage-llm-lab/mcp-servers/virustotal",
-              "tools/triage-llm-lab/mcp-servers/ghidra"
+              "tools/triage-llm-lab/mcp-servers/ghidra",
+              "tools/triage-llm-lab/mcp-servers/x64dbg",
+              "tools/triage-llm-lab/mcp-servers/windbg"
             ]
           },
           {
@@ -70,6 +73,7 @@
             "pages": [
               "tools/triage-llm-lab/analysis-tools",
               "tools/triage-llm-lab/sift-tools",
+              "tools/triage-llm-lab/windows-tools",
               "tools/triage-llm-lab/troubleshooting"
             ]
           },
@@ -85,7 +89,10 @@
               "tools/triage-llm-lab/workflows/java-analysis",
               "tools/triage-llm-lab/workflows/go-analysis",
               "tools/triage-llm-lab/workflows/memory-forensics",
-              "tools/triage-llm-lab/workflows/disk-forensics"
+              "tools/triage-llm-lab/workflows/disk-forensics",
+              "tools/triage-llm-lab/workflows/dynamic-analysis",
+              "tools/triage-llm-lab/workflows/unpacking",
+              "tools/triage-llm-lab/workflows/crash-dump"
             ]
           }
         ]

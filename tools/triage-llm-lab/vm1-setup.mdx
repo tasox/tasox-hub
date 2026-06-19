@@ -65,30 +65,52 @@ cat > ~/malware-analysis/CLAUDE.md << 'EOF'
 # Malware Analysis Lab
 
 ## Startup
-At the start of every session, list all available tools from remnux-ssh MCP grouped
-by their category, list all available tools from sift-ssh MCP grouped by their category,
-then list all available virustotal MCP tools with a short description.
-After showing the full list, wait for the next instruction.
+At the start of every session, list all available tools grouped by category:
+1. remnux-ssh MCP tools grouped by [CATEGORY] tag
+2. sift-ssh MCP tools grouped by [CATEGORY] tag
+3. virustotal MCP tools with a short description of each
+4. x64dbg MCP tools grouped by their category
+5. windbg MCP tools grouped by their category
+Then wait for the next instruction.
 
-## REMnux VM (Static Analysis)
-- Host: 192.168.56.20
-- User: remnux
-- SSH key: /home/tasox/.ssh/remnux_key
-- Intake (zip files):  /home/remnux/intake/
-- Samples (unzipped): /home/remnux/samples/
-- Ghidra maps /home/remnux/samples/ → /data/
+## VMs
+- VM1 Ubuntu:  192.168.56.10 — this machine (Claude Code + MCP host)
+- VM2 REMnux:  192.168.56.20 — static analysis, Ghidra
+- VM3 SIFT:    192.168.56.30 — disk/memory/timeline forensics
+- VM4 Windows: 192.168.56.40 — dynamic analysis, x64dbg, WinDbg
 
-## SIFT VM (Digital Forensics)
-- Host: 192.168.56.30
-- User: sansforensics
-- SSH key: /home/tasox/.ssh/sift_key
-- Cases directory: /cases/
+## SSH Keys & Commands
+- ~/.ssh/remnux_key  → VM2: ssh -i ~/.ssh/remnux_key remnux@192.168.56.20
+- ~/.ssh/sift_key    → VM3: ssh -i ~/.ssh/sift_key sansforensics@192.168.56.30
+- ~/.ssh/windows_key → VM4: ssh -i ~/.ssh/windows_key analyst@192.168.56.40
+
+## MCP Servers
+- remnux-ssh  → static analysis tools on REMnux
+- sift-ssh    → forensic tools on SIFT
+- virustotal  → hash lookups, detections, sample downloads (password: infected)
+- ghidra-mcp  → NOT used directly; use remnux-ssh ghidra_* tools instead
+- x64dbg      → debugger control on Windows VM (via SSH tunnel port 3000)
+- windbg      → CDB/WinDbg crash dump analysis on Windows VM (via SSH tunnel port 8000)
+
+## Directories
+- REMnux intake:   /home/remnux/intake/
+- REMnux samples:  /home/remnux/samples/
+- SIFT cases:      /cases/
+- Windows samples: C:\samples\
+- Windows dumps:   C:\dumps\
+
+## Dynamic Analysis Workflow (Windows)
+1. Start FakeNet on VM4 manually before detonating
+2. Transfer: scp -i ~/.ssh/windows_key <sample> analyst@192.168.56.40:C:/samples/
+3. x64dbg: debug_init → breakpoint_set on APIs → debug_run
+4. Unpack: dump_detect_oep → dump_module
 
 ## Rules
-- Never store or execute samples on VM1 (this machine)
+- Never store or execute samples on VM1
 - Samples only live in /home/remnux/samples/ on REMnux
-- Evidence files live in /cases/ on SIFT
-- Always revert REMnux snapshot after each analysis session
+- Evidence only in /cases/ on SIFT
+- Windows samples in C:\samples\ on VM4
+- Always revert REMnux and Windows snapshots after analysis
 EOF
 ```
 
@@ -99,11 +121,19 @@ cat >> ~/.bashrc << 'EOF'
 
 lab() {
   cd ~/malware-analysis
+  # Start SSH tunnels — x64dbg (3000) and WinDbg (8000)
+  ssh -i ~/.ssh/windows_key -N \
+    -L 3000:127.0.0.1:3000 \
+    -L 8000:127.0.0.1:8000 \
+    analyst@192.168.56.40 &>/dev/null &
+  sleep 3  # wait for tunnels to establish
   echo "Loading malware analysis lab..."
   claude "Show all available tools for this malware analysis lab grouped by category:
 1. List all tools from remnux-ssh MCP grouped by their [CATEGORY] tag
 2. List all tools from sift-ssh MCP grouped by their [CATEGORY] tag
 3. List all tools from virustotal MCP with a short description of each
+4. List all tools from x64dbg MCP grouped by their category
+5. List all tools from windbg MCP grouped by their category
 After showing the full list, wait for my next instruction."
 }
 EOF
@@ -111,4 +141,4 @@ EOF
 source ~/.bashrc
 ```
 
-Type `lab` from anywhere to start an analysis session. Claude will automatically list all available tools grouped by category before waiting for your first prompt.
+Type `lab` from anywhere to start an analysis session. The SSH tunnels to VM4 (x64dbg port 3000, WinDbg port 8000) start automatically, then Claude lists all available tools before waiting for your first prompt.

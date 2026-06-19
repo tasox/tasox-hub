@@ -1,0 +1,59 @@
+---
+title: "Windows Dynamic Analysis Tools"
+description: "Reference for x64dbg, WinDbg, FakeNet-NG, and their MCP integrations on VM4."
+icon: "shield-check"
+---
+
+## Debuggers
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `x64dbg` (64-bit) | User-mode Windows debugger — breakpoints, memory inspection, API tracing, unpacking | install |
+| `x32dbg` (32-bit) | 32-bit companion for analyzing 32-bit malware | install |
+| `WinDbg / CDB` | Kernel-mode debugger — crash dump analysis, driver debugging | pre-installed |
+
+## MCP Plugins
+
+| Tool | Description | Port | Source |
+|------|-------------|------|--------|
+| `x64dbg-mcp plugin` | Exposes x64dbg over HTTP/JSON-RPC — 60+ tools for AI-driven debugging | 3000 | install |
+| `mcp-windbg` | Python wrapper around CDB — exposes WinDbg over HTTP | 8000 | install |
+
+## Network Simulation
+
+| Tool | Description | Source |
+|------|-------------|--------|
+| `FakeNet-NG 3.5` | Intercepts and simulates DNS, HTTP, FTP, SMTP, IRC — prevents malware reaching real C2 | install |
+
+<Warning>
+  Always start FakeNet-NG **before** detonating a sample. Always revert the VM4 snapshot **after** each analysis session.
+</Warning>
+
+## x64dbg MCP Tool Groups
+
+| Group | Key Tools | Use when |
+|-------|-----------|----------|
+| Debug Control | `debug_init`, `debug_attach_pid`, `debug_run`, `debug_pause`, `debug_stop`, `debug_step_into`, `debug_step_over`, `debug_step_out`, `debug_run_to` | Starting, stopping and stepping |
+| Breakpoints | `breakpoint_set`, `breakpoint_delete`, `breakpoint_set_condition`, `breakpoint_set_log`, `breakpoint_list` | Setting API hooks, conditional stops |
+| Registers | `register_get`, `register_set`, `register_get_batch`, `register_list` | Inspecting CPU state |
+| Memory | `memory_read`, `memory_write`, `memory_search`, `memory_enumerate`, `memory_get_info` | Reading/searching process memory |
+| Disassembly | `disassembly_at`, `disassembly_range`, `disassembly_function`, `assembler_assemble` | Viewing and modifying code |
+| Modules | `module_list`, `module_get_imports`, `module_get_exports` | Loaded DLLs and API imports |
+| Dumping | `dump_memory_region`, `dump_module`, `dump_detect_oep`, `dump_analyze_module` | Unpacking — OEP detection and dump |
+| Threads/Stack | `thread_list`, `stack_get_trace`, `stack_read_frame` | Multi-threaded malware analysis |
+| Symbols | `symbol_list`, `symbol_search`, `symbol_set_label`, `symbol_set_comment` | Annotating functions during analysis |
+
+## FakeNet-NG — Start Before Detonating
+
+```cmd
+cd C:\Users\tasox\Downloads\fakenet3.5\fakenet3.5
+fakenet.exe
+```
+
+FakeNet intercepts:
+- **DNS** — returns `127.0.0.1` for all queries
+- **HTTP/HTTPS** — serves a fake response
+- **FTP** — simulates login
+- **SMTP/IRC** — absorbs connections silently
+
+All traffic is logged to the FakeNet console window and a PCAP file. Review the log after execution to extract C2 domains, IPs, and beaconing patterns.

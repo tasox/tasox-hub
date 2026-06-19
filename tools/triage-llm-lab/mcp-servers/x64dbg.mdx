@@ -1,0 +1,71 @@
+---
+title: "x64dbg MCP"
+description: "Connect Claude Code to x64dbg on Windows VM4 via SSH tunnel for AI-driven malware debugging."
+icon: "bug"
+---
+
+The x64dbg MCP plugin exposes the x64dbg debugger over HTTP/JSON-RPC on port 3000. Claude Code connects to it via an SSH tunnel from VM1.
+
+## Prerequisites
+
+- x64dbg installed on VM4 with `x64dbg_mcp.dp64` / `x64dbg_mcp.dp32` plugins loaded
+- VM4 accessible via SSH at `192.168.56.40` with key `~/.ssh/windows_key`
+- x64dbg must be **running** before the tunnel is established
+
+## Step 1 — Start SSH Tunnel
+
+```bash
+# Forwards both x64dbg (3000) and WinDbg (8000) in one tunnel
+ssh -i ~/.ssh/windows_key -N \
+  -L 3000:127.0.0.1:3000 \
+  -L 8000:127.0.0.1:8000 \
+  analyst@192.168.56.40 &
+
+sleep 3  # wait for tunnels to establish
+```
+
+<Tip>
+  The `lab` shell function starts this tunnel automatically. Just type `lab` to begin a session.
+</Tip>
+
+## Step 2 — Test the Connection
+
+```bash
+curl -s -X POST http://127.0.0.1:3000/rpc \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
+  | python3 -m json.tool
+```
+
+## Step 3 — Register with Claude Code
+
+```bash
+claude mcp add x64dbg \
+  --scope user \
+  --transport http \
+  -- http://127.0.0.1:3000/mcp
+
+claude mcp list | grep x64dbg
+```
+
+## Tool Groups
+
+| Group | Key Tools |
+|-------|-----------|
+| Debug Control | `debug_init`, `debug_attach_pid`, `debug_run`, `debug_pause`, `debug_stop`, `debug_step_into`, `debug_step_over`, `debug_step_out`, `debug_run_to` |
+| Breakpoints | `breakpoint_set`, `breakpoint_delete`, `breakpoint_set_condition`, `breakpoint_set_log`, `breakpoint_list` |
+| Registers | `register_get`, `register_set`, `register_get_batch`, `register_list` |
+| Memory | `memory_read`, `memory_write`, `memory_search`, `memory_enumerate`, `memory_get_info` |
+| Disassembly | `disassembly_at`, `disassembly_range`, `disassembly_function`, `assembler_assemble` |
+| Modules | `module_list`, `module_get_imports`, `module_get_exports` |
+| Dumping | `dump_memory_region`, `dump_module`, `dump_detect_oep`, `dump_analyze_module` |
+| Threads/Stack | `thread_list`, `stack_get_trace`, `stack_read_frame` |
+| Symbols | `symbol_list`, `symbol_search`, `symbol_set_label`, `symbol_set_comment` |
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| "Connection refused" on port 3000 | Verify x64dbg is open on VM4 with the MCP plugin loaded. The plugin must show "MCP server started" in x64dbg logs. |
+| Tunnel times out | Ensure the SSH key has correct permissions: `chmod 600 ~/.ssh/windows_key` |
+| `debug_run` times out | Use `debug_pause` first; set a `breakpoint_set` on entry point before running |
